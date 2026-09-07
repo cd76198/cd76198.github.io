@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Level Design Portfolio">
+  <title>Level Design Portfolio</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="Home">
+      <span class="brand-kicker">LEVEL DESIGN</span>
+      <span id="brand-name" class="brand-name">PORTFOLIO</span>
+    </a>
+
+    <nav class="nav" aria-label="Main navigation">
+      <a href="#viewer">3D VIEW</a>
+      <a href="#portfolio">PORTFOLIO</a>
+      <a href="#about">ABOUT</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-copy">
+        <p id="hero-eyebrow" class="eyebrow">LEVEL DESIGN PORTFOLIO</p>
+        <h1 id="hero-title">Playable Space.<br>Visible Decisions.</h1>
+        <p id="hero-summary" class="hero-summary"></p>
+
+        <div id="hero-actions" class="hero-actions"></div>
+      </div>
+
+      <div class="hero-meta" aria-label="Portfolio focus">
+        <div>
+          <span class="meta-label">FOCUS</span>
+          <span id="focus-text">UE5 · FIELD · DUNGEON · REVERSE DESIGN</span>
+        </div>
+        <div>
+          <span class="meta-label">VIEW</span>
+          <span>FIXED QUARTER-VIEW</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="viewer" class="section viewer-section">
+      <div class="section-head">
+        <div>
+          <p class="section-index">01</p>
+          <h2>Spatial Viewer</h2>
+        </div>
+        <p class="section-desc">
+          실제 UE5 Graybox GLB를 직접 회전·확대하며 공간 구조를 확인하는 보조 뷰어.
+        </p>
+      </div>
+
+      <div class="viewer-shell">
+        <div class="viewer-toolbar">
+          <div id="model-switcher" class="control-row" aria-label="Model selector"></div>
+
+          <div class="toolbar-right">
+            <div class="control-row">
+              <button type="button" data-view="free">FREE</button>
+              <button type="button" data-view="top">TOP</button>
+              <button type="button" data-view="quarter" class="active">QUARTER</button>
+              <button type="button" data-view="reset">RESET</button>
+            </div>
+
+            <div class="control-row">
+              <button type="button" id="restore-colors" class="active">RESTORED COLORS</button>
+              <button type="button" id="toggle-grid">GRID</button>
+              <button type="button" id="toggle-axis">AXIS</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="viewer-stage" class="viewer-stage">
+          <canvas id="viewer-canvas" aria-label="Interactive 3D level viewer"></canvas>
+          <div id="viewer-status" class="viewer-status" role="status" aria-live="polite">Loading…</div>
+          <div class="viewer-help">
+            Drag · Rotate &nbsp; / &nbsp; Wheel · Zoom &nbsp; / &nbsp; Right Drag · Pan
+          </div>
+        </div>
+
+        <div class="viewer-note">
+          <strong>Evidence policy</strong>
+          <span>
+            3D Viewer는 실제 UE5 캡처·Top View·Playtest를 대체하지 않고 공간 이해를 돕는 보조 자료로 사용.
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <section id="portfolio" class="section">
+      <div class="section-head">
+        <div>
+          <p class="section-index">02</p>
+          <h2>Portfolio</h2>
+        </div>
+        <p class="section-desc">
+          프로젝트별 역할을 분리하고, PDF·영상·3D Viewer를 필요에 따라 연결할 수 있도록 구성.
+        </p>
+      </div>
+
+      <div id="portfolio-grid" class="portfolio-grid"></div>
+    </section>
+
+    <section id="about" class="section about-section">
+      <div class="section-head">
+        <div>
+          <p class="section-index">03</p>
+          <h2>About</h2>
+        </div>
+      </div>
+
+      <div class="about-grid">
+        <div>
+          <p class="about-kicker">LEVEL DESIGN APPROACH</p>
+          <p id="about-summary" class="about-summary"></p>
+        </div>
+
+        <div id="about-links" class="about-links"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span id="footer-name">LEVEL DESIGN PORTFOLIO</span>
+    <span>STATIC SITE · GITHUB PAGES READY</span>
+  </footer>
+
+  <script type="module" src="./js/app.js?v=1"></script>
+</body>
+</html>
