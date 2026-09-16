@@ -8,7 +8,57 @@
   <link rel="icon" href="data:,">
   <link rel="stylesheet" href="./css/style.css">
 </head>
-<body>
+<body class="mission-lock">
+  <section id="mission-briefing" class="mission-briefing is-sealed" role="dialog" aria-modal="true" aria-labelledby="mission-title">
+    <div class="mission-shade"></div>
+
+    <button id="mission-skip" class="mission-skip" type="button" aria-label="지령서 건너뛰기">
+      건너뛰기 <span aria-hidden="true">×</span>
+    </button>
+
+    <div class="mission-stage">
+      <div class="mission-prompt">
+        <span>새 지령이 도착했습니다</span>
+        <strong>클릭하여 봉인 해제</strong>
+        <i aria-hidden="true">↓</i>
+      </div>
+
+      <button id="mission-sealed" class="mission-sealed" type="button" aria-label="봉인된 지령서 열기">
+        <img src="./assets/images/mission-scroll-sealed.webp" width="1792" height="1024" alt="봉인된 두루마리 지령서">
+      </button>
+
+      <article class="mission-open" aria-hidden="true">
+        <img src="./assets/images/mission-scroll-open.webp" width="1136" height="1664" alt="">
+        <div class="mission-copy">
+          <p class="mission-eyebrow">후속 조사 지령서</p>
+          <h1 id="mission-title">잊힌 신의 성당</h1>
+          <span class="mission-rule" aria-hidden="true"></span>
+          <p class="mission-body">
+            성당 토벌을 위해 파견한 선발대와의 연락이 끊겼습니다.<br>
+            외부에 조성한 임시 진지는 현재 방치된 상태입니다.
+          </p>
+          <p class="mission-body">
+            성당에 진입하여 선발대의 행방과 내부 상황을 확인하십시오.<br>
+            현장에서 발견한 정보는 이후 조사에 활용하십시오.
+          </p>
+          <div class="mission-orders">
+            <span>임무</span>
+            <ol>
+              <li>선발대의 흔적 확인</li>
+              <li>성당 내부 조사</li>
+              <li>생존 후 복귀</li>
+            </ol>
+          </div>
+          <button id="mission-start" class="mission-start" type="button">조사 시작</button>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <button id="mission-replay" class="mission-replay" type="button" hidden>
+    <span aria-hidden="true">◉</span> 지령서 다시 보기
+  </button>
+
   <header class="site-header">
     <a class="brand" href="#top" aria-label="Home">
       <span class="brand-kicker">LEVEL DESIGN</span>
@@ -130,6 +180,7 @@
     <span>STATIC SITE · GITHUB PAGES READY</span>
   </footer>
 
+  <script src="./js/mission-briefing.js?v=1"></script>
   <script type="module" src="./js/app.js?v=1"></script>
 </body>
 </html>
