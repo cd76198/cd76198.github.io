@@ -8,6 +8,8 @@
   const openedDocument = briefing.querySelector('.mission-open');
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   let openingTimer = 0;
+  // Decode the opening artwork while the visitor is still looking at the seal.
+  openedDocument.querySelector('img').decode().catch(() => {});
 
   function showSealed() {
     window.clearTimeout(openingTimer);
@@ -31,7 +33,7 @@
       briefing.classList.remove('is-opening');
       briefing.classList.add('is-opened');
       start.focus();
-    }, reduceMotion ? 10 : 760);
+    }, reduceMotion ? 10 : 320);
   }
 
   function dismissBriefing() {
@@ -42,6 +44,7 @@
     document.body.classList.remove('mission-lock');
     replay.hidden = false;
     replay.focus();
+    window.dispatchEvent(new Event('mission-dismissed'));
   }
 
   sealed.addEventListener('click', openBriefing);

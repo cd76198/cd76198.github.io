@@ -1,5 +1,4 @@
 import { siteData } from './site-data.js';
-import { initSpatialViewer } from './viewer.js';
 
 function setText(id, value) {
   const el = document.getElementById(id);
@@ -103,4 +102,18 @@ function escapeAttr(value='') {
 
 renderProfile();
 renderProjects();
-initSpatialViewer(siteData.viewerModels);
+// The first screen is the briefing. Do not compete with it for network or GPU work.
+async function loadSpatialViewer() {
+  try {
+    const { initSpatialViewer } = await import('./viewer.js');
+    initSpatialViewer(siteData.viewerModels);
+  } catch (error) {
+    document.getElementById('viewer-status').textContent = '3D 뷰어를 불러오지 못했습니다. 새로고침해 주세요.';
+    console.error(error);
+  }
+}
+if (document.getElementById('mission-briefing').hidden) {
+  loadSpatialViewer();
+} else {
+  window.addEventListener('mission-dismissed', loadSpatialViewer, { once: true });
+}
