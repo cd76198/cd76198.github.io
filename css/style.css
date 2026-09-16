@@ -106,12 +106,12 @@ body.mission-lock{overflow:hidden}
   transform:scale(.88);
 }
 .mission-open>img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
-.mission-copy{position:relative;z-index:1;width:62%;max-height:82%;margin-top:1%;color:#24170f;font-family:"Noto Sans KR","Malgun Gothic",sans-serif;font-weight:500;text-align:left;opacity:0;transform:translateY(9px);word-break:keep-all}
-.mission-eyebrow{margin:0 0 3px;color:#7f4a2a;font-family:"Noto Sans KR","Malgun Gothic",sans-serif;font-size:clamp(11px,1.25vh,14px);font-weight:600;letter-spacing:.2em;text-align:center}
+.mission-copy{position:relative;z-index:1;width:62%;max-height:82%;box-sizing:border-box;margin-top:1%;padding-top:12px;color:#24170f;font-family:"Noto Sans KR","Malgun Gothic",sans-serif;font-weight:500;text-align:left;opacity:0;transform:translateY(9px);word-break:keep-all}
+.mission-eyebrow{display:table;margin:0 auto 6px;padding:2px 10px 3px;border-top:1px solid rgba(83,43,25,.38);border-bottom:1px solid rgba(83,43,25,.38);background:rgba(237,205,147,.78);color:#3f2116;font-family:"Noto Sans KR","Malgun Gothic",sans-serif;font-size:clamp(13px,1.45vh,15px);font-weight:700;line-height:1.25;letter-spacing:.14em;text-align:center}
 .mission-copy h1{margin:0;color:#362217;font-family:"Song Myung","Noto Serif KR","Batang",serif;font-size:clamp(28px,3.8vh,38px);font-weight:400;line-height:1.25;letter-spacing:-.035em;text-align:center}
 .mission-rule{display:block;width:54px;height:1px;margin:clamp(8px,1.2vh,13px) auto;background:#a16a3c;box-shadow:15px 0 0 -.25px #a16a3c,-15px 0 0 -.25px #a16a3c}
 .mission-section{margin:0 0 clamp(6px,.9vh,9px)}
-.mission-section h2,.mission-orders h2{margin:0 0 4px;color:#5b2f1d;font-family:"Song Myung","Noto Serif KR","Batang",serif;font-size:clamp(15px,1.85vh,18px);font-weight:400;letter-spacing:.08em}
+.mission-section h2,.mission-orders h2{margin:0 0 5px;color:#472619;font-family:"Noto Sans KR","Malgun Gothic",sans-serif;font-size:clamp(16px,1.95vh,19px);font-weight:700;line-height:1.35;letter-spacing:.035em}
 .mission-section p{margin:0 0 4px;font-size:clamp(13px,1.65vh,15px);line-height:1.55}
 .mission-section p:last-child{margin-bottom:0}
 .mission-facts ul{margin:0;padding-left:1.25em;font-size:clamp(12.5px,1.55vh,14.5px);line-height:1.5}
