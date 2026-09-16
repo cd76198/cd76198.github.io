@@ -95,8 +95,8 @@ body.mission-lock{overflow:hidden}
 .mission-sealed:focus-visible{outline:2px solid #d7b46c;outline-offset:12px;border-radius:50%}
 .mission-open{
   position:absolute;
-  width:min(78vw,570px);
-  height:min(90vh,820px);
+  width:min(82vw,610px);
+  height:min(92vh,850px);
   display:grid;
   place-items:center;
   opacity:0;
@@ -106,15 +106,20 @@ body.mission-lock{overflow:hidden}
   transform:scale(.88);
 }
 .mission-open>img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
-.mission-copy{position:relative;z-index:1;width:66%;max-height:72%;margin-top:1%;text-align:center;opacity:0;transform:translateY(9px)}
-.mission-eyebrow{margin:0 0 5px;color:#7f4a2a;font-family:Georgia,"Times New Roman",serif;font-size:clamp(13px,1.4vh,16px);font-weight:700;letter-spacing:.16em}
-.mission-copy h1{margin:0;color:#3a271b;font-family:Georgia,"Times New Roman","Malgun Gothic",serif;font-size:clamp(27px,4.2vh,40px);line-height:1.25;letter-spacing:-.04em}
-.mission-rule{display:block;width:54px;height:1px;margin:clamp(12px,2vh,20px) auto;background:#a16a3c;box-shadow:15px 0 0 -.25px #a16a3c,-15px 0 0 -.25px #a16a3c}
-.mission-body{margin:0 0 clamp(10px,1.6vh,17px);font-size:clamp(13px,1.55vh,16px);line-height:1.8;word-break:keep-all}
-.mission-orders{width:88%;margin:clamp(12px,2vh,20px) auto 0;padding:clamp(10px,1.6vh,15px) 14px;border-top:1px solid rgba(118,75,43,.42);border-bottom:1px solid rgba(118,75,43,.42);display:grid;grid-template-columns:52px 1fr;gap:10px;text-align:left}
-.mission-orders>span{color:#7e4529;font-weight:800;font-size:14px}
-.mission-orders ol{margin:0;padding:0;list-style-position:inside;font-size:clamp(12px,1.45vh,15px);line-height:1.75}
-.mission-start{min-width:142px;min-height:44px;margin-top:clamp(14px,2.2vh,24px);padding:9px 22px;border:1px solid #673721;border-radius:2px;background:#753c28;color:#fff5dd;box-shadow:inset 0 0 0 2px rgba(245,216,166,.22);font:inherit;font-size:15px;font-weight:750;letter-spacing:.08em;cursor:pointer}
+.mission-copy{position:relative;z-index:1;width:74%;max-height:79%;margin-top:1%;color:#332319;font-family:"Noto Serif KR","Batang",serif;text-align:left;opacity:0;transform:translateY(9px);word-break:keep-all}
+.mission-eyebrow{margin:0 0 3px;color:#7f4a2a;font-family:"Noto Serif KR","Batang",serif;font-size:clamp(11px,1.25vh,14px);font-weight:700;letter-spacing:.2em;text-align:center}
+.mission-copy h1{margin:0;color:#362217;font-family:"Song Myung","Noto Serif KR","Batang",serif;font-size:clamp(28px,3.8vh,38px);font-weight:400;line-height:1.25;letter-spacing:-.035em;text-align:center}
+.mission-rule{display:block;width:54px;height:1px;margin:clamp(8px,1.2vh,13px) auto;background:#a16a3c;box-shadow:15px 0 0 -.25px #a16a3c,-15px 0 0 -.25px #a16a3c}
+.mission-section{margin:0 0 clamp(7px,1.05vh,11px)}
+.mission-section h2,.mission-orders h2{margin:0 0 4px;color:#6b3923;font-family:"Song Myung","Noto Serif KR","Batang",serif;font-size:clamp(14px,1.65vh,16px);font-weight:400;letter-spacing:.08em}
+.mission-section p{margin:0 0 5px;font-size:clamp(11.5px,1.38vh,13.5px);line-height:1.6}
+.mission-section p:last-child{margin-bottom:0}
+.mission-facts ul{margin:0;padding-left:1.25em;font-size:clamp(11px,1.3vh,13px);line-height:1.55}
+.mission-facts li::marker{color:#8c5130}
+.mission-orders{margin:clamp(7px,1vh,10px) 0 0;padding:clamp(7px,1vh,10px) 0;border-top:1px solid rgba(118,75,43,.4);border-bottom:1px solid rgba(118,75,43,.4)}
+.mission-orders ol{margin:0;padding-left:1.45em;font-size:clamp(11px,1.3vh,13px);line-height:1.55}
+.mission-caution{margin:clamp(6px,.9vh,9px) 0 0;color:#52392a;font-size:clamp(10.5px,1.2vh,12px);line-height:1.5;text-align:center}
+.mission-start{display:block;min-width:142px;min-height:42px;margin:clamp(8px,1.3vh,13px) auto 0;padding:8px 22px;border:1px solid #673721;border-radius:2px;background:#753c28;color:#fff5dd;box-shadow:inset 0 0 0 2px rgba(245,216,166,.22);font-family:"Noto Serif KR","Batang",serif;font-size:14px;font-weight:700;letter-spacing:.12em;cursor:pointer}
 .mission-start:hover,.mission-start:focus-visible{background:#8a4930;outline:2px solid #3d2518;outline-offset:3px}
 .mission-briefing.is-opening .mission-prompt,.mission-briefing.is-opened .mission-prompt{opacity:0;transform:translateY(-10px);pointer-events:none}
 .mission-briefing.is-opening .mission-sealed,.mission-briefing.is-opened .mission-sealed{animation:mission-seal-break .42s ease both;pointer-events:none}
@@ -429,14 +434,16 @@ main{max-width:var(--max);margin:0 auto}
   .mission-prompt{top:12%}
   .mission-sealed{width:94vw}
   .mission-open{width:min(96vw,520px);height:min(86svh,760px)}
-  .mission-copy{width:68%;max-height:70%}
-  .mission-body br{display:none}
+  .mission-copy{width:72%;max-height:78%}
+  .mission-section p{font-size:clamp(10px,1.72vw,12px);line-height:1.55}
+  .mission-facts ul,.mission-orders ol{font-size:clamp(9.5px,1.65vw,11.5px)}
+  .mission-caution br{display:none}
   .mission-replay{right:12px;bottom:12px}
 }
 @media(max-height:720px) and (min-width:641px){
   .mission-open{height:94vh;width:min(62vw,490px)}
-  .mission-copy{width:65%;max-height:74%}
-  .mission-body{line-height:1.62}
+  .mission-copy{width:70%;max-height:80%}
+  .mission-section p{line-height:1.5}
   .mission-orders{margin-top:9px;padding-top:8px;padding-bottom:8px}
   .mission-start{margin-top:10px}
 }
