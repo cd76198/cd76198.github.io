@@ -2,7 +2,6 @@
   const sessionKey = 'level-portfolio-mission-briefing-seen';
   const briefing = document.getElementById('mission-briefing');
   const sealed = document.getElementById('mission-sealed');
-  const skip = document.getElementById('mission-skip');
   const start = document.getElementById('mission-start');
   const replay = document.getElementById('mission-replay');
   const openedDocument = briefing.querySelector('.mission-open');
@@ -48,7 +47,6 @@
   }
 
   sealed.addEventListener('click', openBriefing);
-  skip.addEventListener('click', dismissBriefing);
   start.addEventListener('click', dismissBriefing);
   replay.addEventListener('click', showSealed);
   window.addEventListener('keydown', event => {
