@@ -11,17 +11,16 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&amp;family=Song+Myung&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./css/style.css?v=7">
+  <link rel="stylesheet" href="./css/style.css?v=8">
 </head>
 <body class="mission-lock">
   <section id="mission-briefing" class="mission-briefing is-sealed" role="dialog" aria-modal="true" aria-labelledby="mission-title">
     <div class="mission-shade"></div>
 
-    <button id="mission-skip" class="mission-skip" type="button" aria-label="지령서 건너뛰기">
-      건너뛰기 <span aria-hidden="true">×</span>
-    </button>
-
     <div class="mission-stage">
+      <button id="mission-skip" class="mission-skip" type="button" aria-label="지령서 접고 포트폴리오 보기">
+        <span class="mission-paper-tab">접기</span>
+      </button>
       <div class="mission-prompt">
         <span>새 지령이 도착했습니다</span>
         <strong>클릭하여 봉인 해제</strong>
@@ -70,8 +69,12 @@
             교단과 봉인에 관한 기록은 대부분 소실됐습니다.<br>
             기존 보고와 다를 경우 현장에서 직접 확인한 사실을 우선하십시오.
           </p>
-          <button id="mission-start" class="mission-start" type="button">조사 시작</button>
+
         </div>
+          <button id="mission-start" class="mission-start" type="button">
+            <span class="mission-wax-seal" aria-hidden="true"><span>✦</span></span>
+            <span class="mission-start-label">포트폴리오 보기 <span class="mission-click">[클릭]</span></span>
+          </button>
       </article>
     </div>
   </section>
