@@ -1,12 +1,16 @@
 import * as THREE from 'https://esm.sh/three@0.180.0';
 import { OrbitControls } from 'https://esm.sh/three@0.180.0/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'https://esm.sh/three@0.180.0/examples/jsm/loaders/GLTFLoader.js';
+import { locations } from './locations.js';
 
 export function initSpatialViewer(models) {
   const canvas = document.getElementById('viewer-canvas');
   const holder = document.getElementById('viewer-stage');
   const statusEl = document.getElementById('viewer-status');
   const switcher = document.getElementById('model-switcher');
+  const markerLayer = document.getElementById('location-markers');
+  const locationList = document.getElementById('location-list');
+  const locationDetail = document.getElementById('location-detail');
 
   const renderer = new THREE.WebGLRenderer({
     canvas,
@@ -48,6 +52,7 @@ export function initSpatialViewer(models) {
   let radius = 1;
   let originalMaterials = new Map();
   let restoredEnabled = true;
+  let activeLocations = [];
 
   const neutralMaterial = new THREE.MeshStandardMaterial({
     color: 0xaeb4bc,
@@ -212,6 +217,9 @@ export function initSpatialViewer(models) {
       modelConfig.path,
       gltf => {
         disposeModel(modelRoot);
+        markerLayer.replaceChildren();
+        locationList.replaceChildren();
+        locationDetail.replaceChildren();
         modelRoot = gltf.scene;
         originalMaterials = new Map();
 
@@ -224,6 +232,7 @@ export function initSpatialViewer(models) {
         updateBounds();
         applyMaterials();
         quarterView();
+        setupLocations(modelConfig.id);
         markView('quarter');
         setStatus('');
         markModel(modelConfig.id);
@@ -239,6 +248,62 @@ export function initSpatialViewer(models) {
         setStatus(`${modelConfig.label} GLB 로딩 실패`, true);
       }
     );
+  }
+
+  function setupLocations(modelId) {
+    activeLocations = [];
+    const meshes = new Map();
+    modelRoot.traverse(obj => {
+      if (obj.isMesh && !meshes.has(obj.name)) meshes.set(obj.name, obj);
+    });
+
+    for (const entry of locations[modelId] || []) {
+      const mesh = meshes.get(entry.mesh);
+      if (!mesh) continue;
+      const position = new THREE.Box3().setFromObject(mesh).getCenter(new THREE.Vector3());
+      const item = { ...entry, position };
+      const number = activeLocations.length + 1;
+      const marker = document.createElement('button');
+      marker.type = 'button';
+      marker.className = 'location-marker';
+      marker.textContent = number;
+      marker.title = entry.label;
+      marker.setAttribute('aria-label', `${number}. ${entry.label}`);
+      marker.addEventListener('click', () => selectLocation(item, true));
+      markerLayer.appendChild(marker);
+      item.marker = marker;
+
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'location-item';
+      button.textContent = `${String(number).padStart(2, '0')}  ${entry.label}`;
+      button.addEventListener('click', () => selectLocation(item, true));
+      locationList.appendChild(button);
+      item.button = button;
+      activeLocations.push(item);
+    }
+
+    if (activeLocations.length) selectLocation(activeLocations[0], false);
+    else locationDetail.textContent = '이 모델에 등록된 공간 해설이 없습니다.';
+  }
+
+  function selectLocation(item, focus) {
+    for (const entry of activeLocations) {
+      entry.marker.classList.toggle('active', entry === item);
+      entry.button.classList.toggle('active', entry === item);
+    }
+    locationDetail.replaceChildren();
+    const title = document.createElement('h4');
+    title.textContent = item.label;
+    const paragraph = document.createElement('p');
+    paragraph.textContent = item.summary;
+    locationDetail.append(title, paragraph);
+    if (focus) {
+      const offset = camera.position.clone().sub(controls.target);
+      controls.target.copy(item.position);
+      camera.position.copy(item.position).add(offset);
+      controls.update();
+    }
   }
 
   function markModel(id) {
@@ -309,6 +374,16 @@ export function initSpatialViewer(models) {
 
   function loop() {
     controls.update();
+    const bounds = holder.getBoundingClientRect();
+    for (const item of activeLocations) {
+      const projected = item.position.clone().project(camera);
+      const visible = projected.z > -1 && projected.z < 1 && Math.abs(projected.x) < 1 && Math.abs(projected.y) < 1;
+      item.marker.hidden = !visible;
+      if (visible) {
+        item.marker.style.left = `${(projected.x + 1) * bounds.width / 2}px`;
+        item.marker.style.top = `${(1 - projected.y) * canvas.clientHeight / 2}px`;
+      }
+    }
     renderer.render(scene, camera);
     requestAnimationFrame(loop);
   }

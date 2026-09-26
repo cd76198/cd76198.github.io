@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&amp;family=Song+Myung&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./css/style.css?v=9">
+  <link rel="stylesheet" href="./css/style.css?v=10">
 </head>
 <body class="mission-lock">
   <section id="mission-briefing" class="mission-briefing is-sealed" role="dialog" aria-modal="true" aria-labelledby="mission-title">
@@ -122,7 +122,7 @@
           <h2>Spatial Viewer</h2>
         </div>
         <p class="section-desc">
-          실제 UE5 Graybox GLB를 직접 회전·확대하며 공간 구조를 확인하는 보조 뷰어.
+          실제 UE5 Graybox의 구역을 선택해 설계 의도와 공간 구조를 함께 확인합니다.
         </p>
       </div>
 
@@ -149,10 +149,21 @@
         <div id="viewer-stage" class="viewer-stage">
           <canvas id="viewer-canvas" aria-label="Interactive 3D level viewer"></canvas>
           <div id="viewer-status" class="viewer-status" role="status" aria-live="polite">Loading…</div>
+          <div id="location-markers" class="location-markers" aria-label="맵 구역 선택"></div>
           <div class="viewer-help">
-            Drag · Rotate &nbsp; / &nbsp; Wheel · Zoom &nbsp; / &nbsp; Right Drag · Pan
+            드래그 · 회전 &nbsp; / &nbsp; 휠 · 확대 &nbsp; / &nbsp; 오른쪽 드래그 · 이동
           </div>
         </div>
+
+        <section class="location-guide" aria-label="공간 해설">
+          <div class="location-guide-heading">
+            <span class="section-index">MAP GUIDE</span>
+            <h3>공간별 설계 해설</h3>
+            <p>목록 또는 맵의 번호를 선택하면 해당 위치로 이동합니다.</p>
+          </div>
+          <div id="location-list" class="location-list"></div>
+          <article id="location-detail" class="location-detail" aria-live="polite"></article>
+        </section>
 
         <div class="viewer-note">
           <strong>Evidence policy</strong>

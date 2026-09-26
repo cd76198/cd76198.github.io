@@ -275,6 +275,41 @@ main{max-width:var(--max);margin:0 auto}
   font-size:12px;
 }
 .viewer-status.error{color:#ffd1bd;border-color:#7d422f}
+.location-markers{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.location-marker{
+  position:absolute;
+  transform:translate(-50%,-50%);
+  width:32px;height:32px;
+  border:1px solid #ffd695;
+  border-radius:50%;
+  background:#1a1e24e8;
+  color:#fff;
+  font-family:inherit;font-size:12px;font-weight:700;
+  cursor:pointer;
+  pointer-events:auto;
+  box-shadow:0 2px 12px #000a;
+}
+.location-marker.active,.location-marker:hover{background:var(--accent);color:#101216}
+.location-marker:focus-visible,.location-item:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.location-marker[hidden]{display:none}
+.location-guide{
+  display:grid;
+  grid-template-columns:minmax(185px,.8fr) minmax(175px,.7fr) minmax(220px,1.5fr);
+  gap:22px;
+  padding:22px;
+  border-top:1px solid var(--line);
+}
+.location-guide h3{margin:0 0 8px;font-size:20px}
+.location-guide-heading p,.location-detail p{margin:0;color:var(--muted);font-size:12px;line-height:1.7}
+.location-list{display:grid;align-content:start;gap:6px}
+.location-item{
+  width:100%;padding:9px 12px;text-align:left;
+  background:#1a1e24;color:var(--soft);
+  border:1px solid var(--line);font:inherit;font-size:12px;cursor:pointer;
+}
+.location-item:hover,.location-item.active{border-color:var(--accent);color:var(--text)}
+.location-detail{padding:16px;border-left:1px solid var(--line);min-height:100px}
+.location-detail h4{margin:0 0 10px;font-size:18px}
 .viewer-help{
   position:absolute;
   right:16px;
@@ -400,6 +435,8 @@ main{max-width:var(--max);margin:0 auto}
 }
 
 @media(max-width:980px){
+  .location-guide{grid-template-columns:1fr 1fr}
+  .location-detail{grid-column:1 / -1}
   .hero{grid-template-columns:1fr}
   .hero-meta{padding-left:0;padding-top:20px;border-left:0;border-top:1px solid var(--line)}
   .section-head,.about-grid{grid-template-columns:1fr}
@@ -409,6 +446,8 @@ main{max-width:var(--max);margin:0 auto}
   .toolbar-right{justify-content:flex-start}
 }
 @media(max-width:640px){
+  .location-guide{grid-template-columns:1fr;padding:16px}
+  .location-detail{grid-column:auto}
   .site-header{padding:0 16px;align-items:flex-start;flex-direction:column;justify-content:center;min-height:88px}
   .nav{gap:16px}
   .hero,.section{padding-left:16px;padding-right:16px}
