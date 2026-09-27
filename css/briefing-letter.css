@@ -43,8 +43,14 @@
   font-size:clamp(17px,2.1svh,21px);font-weight:600;
   letter-spacing:-.04em;line-height:1.35;text-align:left;
 }
-.mission-copy>p:not(.mission-eyebrow){margin:0 0 7px}
-.mission-signature{margin-top:8px!important;color:#725646;font-size:.93em;font-style:italic}
+.mission-columns{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px;align-items:start}
+.mission-copy .mission-section{margin:0 0 13px}
+.mission-copy .mission-section h2,.mission-copy .mission-orders h2{margin:0 0 5px;font-family:inherit;font-size:14px;line-height:1.4}
+.mission-copy .mission-section p{margin:0 0 7px;font-size:13px;line-height:1.58}
+.mission-copy .mission-facts ul,.mission-copy .mission-orders ol{font-size:13px;line-height:1.58}
+.mission-copy .mission-facts li,.mission-copy .mission-orders li{margin:0 0 5px}
+.mission-copy .mission-orders{margin:0;padding:0 0 12px;border-top:0}
+.mission-copy .mission-caution{margin:12px 0 0;font-size:12px;line-height:1.6;text-align:left}
 .mission-start{
   position:absolute;z-index:3;right:3.2%;bottom:17.3%;
   width:12%;height:12%;min-height:0;margin:0;padding:0;
@@ -87,7 +93,12 @@
   .mission-sealed{width:94vw}
   .mission-copy{top:30%;height:54%;font-size:clamp(10px,1.6svh,11.5px);line-height:1.48}
   .mission-copy h1{font-size:clamp(15px,2.3svh,18px);margin-bottom:5px}
-  .mission-copy>p:not(.mission-eyebrow){margin-bottom:4px}
+  .mission-columns{grid-template-columns:1fr;gap:8px}
+  .mission-copy .mission-section p,.mission-copy .mission-facts ul,.mission-copy .mission-orders ol{font-size:11px;line-height:1.5}
+  .mission-copy .mission-section h2,.mission-copy .mission-orders h2{font-size:12px}
+  .mission-copy .mission-section{margin-bottom:9px}
+  .mission-copy .mission-orders{padding:0 0 8px}
+  .mission-copy .mission-caution{font-size:10.5px}
   .mission-start-label{font-size:10px}
 }
 @media(max-height:620px){
