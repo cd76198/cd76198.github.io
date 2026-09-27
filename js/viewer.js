@@ -146,7 +146,7 @@ export function initSpatialViewer(models) {
 
     const button = document.getElementById('restore-colors');
     button.classList.toggle('active', restoredEnabled);
-    button.textContent = restoredEnabled ? 'RESTORED COLORS' : 'ALL GRAY';
+    button.textContent = restoredEnabled ? '원본 색상' : '단색 보기';
   }
 
   function updateBounds() {
@@ -205,7 +205,7 @@ export function initSpatialViewer(models) {
   function loadModel(modelConfig) {
     if (!modelConfig?.enabled) return;
 
-    setStatus(`Loading ${modelConfig.label}…`);
+    setStatus(`${modelConfig.label} 불러오는 중…`);
     currentModelId = modelConfig.id;
 
     loader.load(
@@ -232,7 +232,7 @@ export function initSpatialViewer(models) {
       xhr => {
         if (xhr.total) {
           const percent = Math.round((xhr.loaded / xhr.total) * 100);
-          setStatus(`Loading ${modelConfig.label}… ${percent}%`);
+          setStatus(`${modelConfig.label} 불러오는 중… ${percent}%`);
         }
       },
       err => {

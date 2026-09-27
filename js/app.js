@@ -1,4 +1,5 @@
 import { siteData } from './site-data.js';
+import { fieldNotes } from './field-notes.js';
 
 function setText(id, value) {
   const el = document.getElementById(id);
@@ -64,8 +65,6 @@ function renderProjects() {
       actions = project.links.map(link =>
         `<a class="project-link${link.primary ? ' primary' : ''}" href="${escapeAttr(link.href)}">${escapeHtml(link.label)}</a>`
       ).join('');
-    } else {
-      actions = `<span class="project-link disabled">별도 제출한 PDF 참고</span>`;
     }
 
     card.innerHTML = `
@@ -76,7 +75,7 @@ function renderProjects() {
       <h3>${escapeHtml(project.title)}</h3>
       <p class="project-role">${escapeHtml(project.role)}</p>
       <div class="project-tags">${tags}</div>
-      <div class="project-actions">${actions}</div>
+      ${actions ? `<div class="project-actions">${actions}</div>` : ''}
     `;
 
     grid.appendChild(card);
@@ -98,20 +97,31 @@ function escapeAttr(value='') {
 
 renderProfile();
 renderProjects();
-const regionInfo={field:['외부 필드','순례자 계단과 토벌대의 임시 진입로를 따라 성당에 접근하며 길과 랜드마크의 배치를 살펴볼 수 있습니다.'],bridge:['약한 다리','다리 끝을 지난 상태에서 8회 공격하면 다리의 충돌이 사라집니다. 중간보스를 처치한 뒤 레버로 복구할 수 있습니다.'],door:['중간보스 문','문 가까이에서 E를 5초 유지하면 열립니다. 피격이나 키 해제 시 진행량이 초기화됩니다.'],stairs:['계단','중간보스 처치 2초 뒤 계단을 막던 차단막이 자동으로 열립니다. 상층 벽은 플레이어가 아래층에 있으면 투명해집니다.'],lever:['다리 복구 레버','중간보스 처치 직후 계단 끝의 장치가 나타납니다. 레버 근처에서 E를 누르면 무너진 다리를 복구합니다.'],puzzle:['색 순서 장치','파랑 → 빨강 → 초록 순서입니다. 오답일 때 적 3명이 등장하며, 모두 처치하거나 60초가 지나야 다시 시도할 수 있습니다.']};
-const regionDialog=document.getElementById('region-dialog');
-document.querySelectorAll('[data-region]').forEach(button=>button.addEventListener('click',()=>{
-  const [title,description]=regionInfo[button.dataset.region];
-  document.getElementById('region-title').textContent=title;
-  document.getElementById('region-description').textContent=description;
-  regionDialog.showModal();
-}));
-document.getElementById('region-close').addEventListener('click',()=>regionDialog.close());
+const fieldNoteLinks=document.getElementById('field-note-links');
+const fieldNoteDialog=document.getElementById('field-note-dialog');
+fieldNotes.forEach((point,index)=>{
+  const button=document.createElement('button');
+  button.type='button';
+  button.textContent=`${index+1}. ${point.title}`;
+  button.addEventListener('click',()=>{
+    document.getElementById('field-note-title').textContent=point.title;
+    const content=document.getElementById('field-note-content');
+    content.replaceChildren();
+    for(const line of point.body.split('\n')){
+      const paragraph=document.createElement('p');
+      paragraph.textContent=line;
+      content.append(paragraph);
+    }
+    fieldNoteDialog.showModal();
+  });
+  fieldNoteLinks.append(button);
+});
+document.getElementById('field-note-close').addEventListener('click',()=>fieldNoteDialog.close());
 let playLoaded=false;
 async function loadPlay(){
   if(playLoaded)return;playLoaded=true;
-  try { await import('./play.js?v=6'); }
-  catch(error){playLoaded=false;document.getElementById('play-status').textContent=/WebGL context/i.test(String(error))?'이 브라우저에서 WebGL을 사용할 수 없습니다. 오른쪽 지역 버튼으로 내용을 확인하세요.':'플레이 화면을 불러오지 못했습니다. 새로고침해 주세요.';console.error(error)}
+  try { await import('./play.js?v=7'); }
+  catch(error){playLoaded=false;document.getElementById('play-status').textContent=/WebGL context/i.test(String(error))?'이 브라우저에서 3D 플레이를 사용할 수 없습니다.':'플레이 화면을 불러오지 못했습니다. 새로고침해 주세요.';console.error(error)}
 }
 document.querySelectorAll('a[href="#play"],#play-field,#play-dungeon').forEach(link=>link.addEventListener('pointerdown',loadPlay,{once:true}));
 new IntersectionObserver((entries,observer)=>{if(entries.some(e=>e.isIntersecting)){loadPlay();observer.disconnect()}},{rootMargin:'250px'}).observe(document.getElementById('play'));
