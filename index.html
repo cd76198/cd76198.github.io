@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&amp;family=Noto+Serif+KR:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./css/style.css?v=9">
-  <link rel="stylesheet" href="./css/briefing-letter.css?v=4">
+  <link rel="stylesheet" href="./css/briefing-letter.css?v=5">
 </head>
 <body class="mission-lock">
   <section id="mission-briefing" class="mission-briefing is-sealed" role="dialog" aria-modal="true" aria-labelledby="mission-title">
@@ -32,13 +32,38 @@
       <article class="mission-open" aria-hidden="true">
         <img class="mission-envelope-back" src="./assets/images/mission-envelope.webp" width="1615" height="974" alt="">
         <img class="mission-paper" src="./assets/images/mission-letter-wide.webp" width="1362" height="1155" fetchpriority="high" alt="">
-        <div class="mission-copy">
-          <p class="mission-eyebrow">모험가님께.</p>
+        <div class="mission-copy" tabindex="0" aria-label="후속 조사 지령서 본문">
+          <p class="mission-eyebrow">후속 조사 지령서</p>
           <h1 id="mission-title">잊혀진 신의 성당</h1>
-          <p>이름이 지워진 신의 성당에서 선발대가 실종됐습니다.</p>
-          <p>토벌대 진입로와 옛 순례자의 계단은 정면 입구로 이어집니다. 두 길에서 선발대의 흔적을 찾아 주십시오.</p>
-          <p>성당 내부의 장치와 기록을 조사하십시오. 기존 보고와 다르다면 현장에서 확인한 사실을 우선해 주십시오.</p>
-          <p class="mission-signature">후속 조사 지령서</p>
+          <div class="mission-columns">
+            <div>
+              <section class="mission-section">
+                <h2>발령 배경</h2>
+                <p>이 성당은 기록에서 이름이 지워진 신을 섬기던 독립 교단의 거점이었습니다. 교단 소멸 뒤 성당은 봉쇄됐고, 순례자의 계단과 외벽은 붕괴했습니다.</p>
+                <p>최근 토벌대가 내부 조사를 위해 임시 천막과 진입로를 조성했습니다. 선발대 진입 후 연락이 끊겨 외부 진지는 방치됐습니다.</p>
+              </section>
+              <section class="mission-section mission-facts">
+                <h2>확인된 상황</h2>
+                <ul>
+                  <li>성당 진입은 정면 입구 한 곳만 확인됐습니다.</li>
+                  <li>폐허 순례자의 계단과 토벌대의 임시 진입로가 남아 있습니다.</li>
+                  <li>교단의 의식 시설이 내부에 남아 있을 가능성이 있습니다.</li>
+                </ul>
+              </section>
+            </div>
+            <div>
+              <section class="mission-orders">
+                <h2>임무</h2>
+                <ol>
+                  <li>선발대의 흔적과 마지막 이동 경로를 확인하십시오.</li>
+                  <li>성당 내부 구조와 의식 시설을 조사하십시오.</li>
+                  <li>발견한 장치와 기록을 보존하십시오.</li>
+                  <li>생환 후 조사 결과를 보고하십시오.</li>
+                </ol>
+              </section>
+              <p class="mission-caution">교단과 봉인에 관한 기록은 대부분 소실됐습니다.<br>기존 보고와 다를 경우 현장에서 직접 확인한 사실을 우선하십시오.</p>
+            </div>
+          </div>
         </div>
         <button id="mission-start" class="mission-start" type="button" aria-label="인장을 눌러 편지를 접고 포트폴리오 보기">
           <span class="mission-start-label">포트폴리오 보기</span>
