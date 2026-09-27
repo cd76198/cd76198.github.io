@@ -110,5 +110,8 @@ document.getElementById('play-reset').addEventListener('click',()=>{if(running)o
 document.addEventListener('keydown',e=>{if(!root.matches(':hover') && document.activeElement!==canvas)return;const k=e.key.toLowerCase();if('wasdejr'.includes(k)){e.preventDefault();held.add(k)}if(k==='j'&&!e.repeat)doAttack();if(k==='e'&&!e.repeat)interact();if(k==='r'&&!e.repeat)openMap(map)});
 document.addEventListener('keyup',e=>held.delete(e.key.toLowerCase()));
 window.addEventListener('blur',()=>held.clear());canvas.addEventListener('click',()=>{canvas.focus();doAttack()});
-const regionInfo={field:['외부 필드','순례자 계단과 토벌대의 임시 진입로를 따라 성당에 접근합니다. 진입 지점에서 던전으로 전환됩니다.'],bridge:['약한 다리','다리 끝을 지난 상태에서 8회 공격하면 다리의 충돌이 사라집니다. 계단 장치의 레버로 복구할 수 있습니다.'],door:['중간보스 문','문 가까이에서 E를 5초 유지하면 열립니다. 피격이나 키 해제 시 진행량이 초기화됩니다.'],stairs:['계단과 레버','중간보스 처치 후 차단막이 자동으로 열립니다. 레버를 누르면 무너진 다리만 복구됩니다.'],puzzle:['색 순서 장치','파랑 → 빨강 → 초록 순서입니다. 오답일 때 적 3명이 등장하며, 모두 처치하거나 60초가 지나야 다시 시도할 수 있습니다.']};
-document.querySelectorAll('[data-region]').forEach(b=>b.addEventListener('click',()=>setInfo(...regionInfo[b.dataset.region])));
+document.querySelectorAll('[data-key]').forEach(button=>{
+  const key=button.dataset.key;
+  button.addEventListener('pointerdown',e=>{e.preventDefault();button.setPointerCapture(e.pointerId);held.add(key);if(key==='j')doAttack();if(key==='e')interact()});
+  for(const event of ['pointerup','pointercancel','lostpointercapture'])button.addEventListener(event,()=>held.delete(key));
+});
