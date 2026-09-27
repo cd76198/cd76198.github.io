@@ -14,8 +14,8 @@ export const siteData = {
       // { label: "GITHUB", href: "https://github.com/USERNAME" }
     ],
     heroActions: [
-      { label: "VIEW PORTFOLIO", href: "#portfolio", primary: true },
-      { label: "OPEN 3D VIEWER", href: "#viewer", primary: false }
+      { label: "PLAY THE LEVEL", href: "#play", primary: true },
+      { label: "VIEW PORTFOLIO", href: "#portfolio", primary: false }
     ]
   },
 

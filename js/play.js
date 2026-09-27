@@ -28,7 +28,7 @@ let metadata, map = 'field', visual, collision, solids = [], surfaces = [], runn
 let position = new THREE.Vector3(), lastSafe = new THREE.Vector3(), frame = performance.now(), held = new Set();
 let game = {}, enemies = [], introSeen = new Set(), pulse = 0, interaction = null;
 const points = {
-  field:[{x:155,z:1,title:'출발지',body:'고정 쿼터뷰로 길과 랜드마크를 확인하는 필드 시작점입니다.'},{x:184.6,z:24.8,title:'토벌대 임시 진지',body:'외부 조사대가 설치한 거점과 성당 접근 동선을 살펴보세요.'},{x:215,z:0,title:'성당 진입',body:'입구를 통과하면 보수된 던전 v02로 전환됩니다.'}],
+  field:[{x:155,z:1,title:'출발지',body:'고정 쿼터뷰로 길과 랜드마크를 확인하는 필드 시작점입니다.'},{x:184.6,z:24.8,title:'토벌대 임시 진지',body:'외부 조사대가 설치한 거점과 성당 접근 동선을 살펴보세요.'},{x:215,z:0,title:'성당 진입',body:'입구를 통과하면 보수된 던전 v02로 전환됩니다.'},{x:233.05,z:-22.8,title:'틈새 살펴보기',body:'필드 관찰 지점에 배치된 색 장치의 단서를 살펴볼 수 있습니다.'}],
   dungeon:[{x:0,z:-12,title:'던전 진입',body:'선발대의 경로를 따라 다리와 문, 계단, 색 순서 장치를 조사합니다.'},{x:52.5,z:11,title:'약한 다리',body:'공격 8회로 다리를 파괴할 수 있으며, 레버에서 복구합니다.'},{x:63,z:11,title:'중간보스 문',body:'문 근처에서 E를 5초 동안 눌러 개방합니다.'},{x:79,z:11,title:'계단과 레버',body:'중간보스 처치 후 장치가 자동 가동됩니다. 레버의 E는 다리 복구입니다.'},{x:53.75,z:1.5,title:'색 순서 장치',body:'파랑 → 빨강 → 초록 순서로 누르세요. 오답이면 적 3명이 나타납니다.'}]
 };
 function say(message){log.textContent=message;}
@@ -78,6 +78,9 @@ function doAttack(){if(!running||game.finished||performance.now()/1000<game.atta
 }
 function interact(){if(!running||game.finished)return;
   const near=points[map].find(p=>distance(p.x,p.z)<4);if(near){setInfo(near.title,near.body);if(map==='field' && near.x===215 && position.x>215.4){openMap('dungeon');return}}
+  if(map==='field' && near?.title==='틈새 살펴보기'){
+    document.querySelector('[data-region="field"]').click();return;
+  }
   if(map!=='dungeon')return;
   if(game.penalty>0){say('페널티가 끝나면 장치를 다시 조작할 수 있습니다.');return}
   if(game.lever && objDist('MCP_TEST_TransformStair_Blocker')<4){game.bridgeBroken=false;game.bridgeHits=0;['P02_BridgeWeakSection_Deck','P02_BridgeWeakSection_RailS','P02_BridgeWeakSection_RailN'].forEach(n=>hide(n,true));say('레버로 다리를 복구했습니다.');return}
@@ -102,7 +105,7 @@ function update(dt){
   if(game.finalDoor && objDist('P02_EndTrigger')<2.5){game.finished=true;setInfo('조사 완료','성당 내부의 주요 장치와 경로 조사를 마쳤습니다. 다른 지역의 설명도 확인해 보세요.');say('조사 완료 · R로 다시 시작');}
 }
 function respawn(){game.hp=100;hpLabel.textContent='HP 100';position.copy(game.respawn);say('다시 시작 지점으로 이동했습니다. 기믹 진행 상태는 유지됩니다.');}
-function loop(now){requestAnimationFrame(loop);const dt=Math.min((now-frame)/1000,.05);frame=now;if(running)update(dt);renderer.render(scene,camera)}requestAnimationFrame(loop);
+function loop(now){requestAnimationFrame(loop);const dt=Math.min((now-frame)/1000,.05);frame=now;if(running&&!document.getElementById('region-dialog').open)update(dt);renderer.render(scene,camera)}requestAnimationFrame(loop);
 function resize(){const w=canvas.clientWidth,h=canvas.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.fov=2*THREE.MathUtils.radToDeg(Math.atan(Math.tan(Math.PI/8)/camera.aspect));camera.updateProjectionMatrix()}new ResizeObserver(resize).observe(canvas);resize();
 document.getElementById('play-field').addEventListener('click',()=>openMap('field').catch(e=>{console.error(e);status.hidden=false;status.textContent='필드 로딩 오류'}));
 document.getElementById('play-dungeon').addEventListener('click',()=>openMap('dungeon').catch(e=>{console.error(e);status.hidden=false;status.textContent='던전 로딩 오류'}));
