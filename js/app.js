@@ -33,13 +33,9 @@ function renderProfile() {
   aboutLinks.innerHTML = '';
 
   if (!(p.links || []).length) {
-    const placeholder = document.createElement('div');
-    placeholder.style.color = 'var(--muted)';
-    placeholder.style.fontSize = '12px';
-    placeholder.style.lineHeight = '1.7';
-    placeholder.textContent = 'site-data.js에서 Email / Resume / GitHub 링크를 추가하면 이 영역에 자동 표시됨.';
-    aboutLinks.appendChild(placeholder);
+    aboutLinks.hidden = true;
   } else {
+    aboutLinks.hidden = false;
     for (const link of p.links) {
       const a = document.createElement('a');
       a.href = link.href;
@@ -69,7 +65,7 @@ function renderProjects() {
         `<a class="project-link${link.primary ? ' primary' : ''}" href="${escapeAttr(link.href)}">${escapeHtml(link.label)}</a>`
       ).join('');
     } else {
-      actions = `<span class="project-link disabled">LINKS TO BE ADDED</span>`;
+      actions = `<span class="project-link disabled">별도 제출한 PDF 참고</span>`;
     }
 
     card.innerHTML = `
