@@ -138,9 +138,9 @@ export function initSpatialViewer(models) {
       if (!restoredEnabled) {
         obj.material = neutralMaterial;
       } else if (Array.isArray(original)) {
-        obj.material = original.map(repairedMaterialFor);
+        obj.material = original;
       } else {
-        obj.material = repairedMaterialFor(original);
+        obj.material = original;
       }
     });
 
@@ -218,6 +218,7 @@ export function initSpatialViewer(models) {
         scene.add(modelRoot);
 
         modelRoot.traverse(obj => {
+          if(obj.userData?.initially_hidden)obj.visible=false;
           if (obj.isMesh) originalMaterials.set(obj.uuid, obj.material);
         });
 

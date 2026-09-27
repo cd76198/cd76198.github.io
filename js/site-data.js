@@ -23,19 +23,17 @@ export const siteData = {
     {
       id: "dungeon",
       label: "DUNGEON",
-      title: "Dungeon Graybox",
+      title: "Dungeon · repaired v02",
       path: "./assets/models/dungeon.glb",
       enabled: true
     },
 
-    // Field GLB가 준비되면 아래 항목을 enabled: true로 바꾸고
-    // assets/models/field.glb 파일을 추가하면 됨.
     {
       id: "field",
       label: "FIELD",
-      title: "Field Graybox",
+      title: "Field · v09-17_A",
       path: "./assets/models/field.glb",
-      enabled: false
+      enabled: true
     }
   ],
 
@@ -43,23 +41,20 @@ export const siteData = {
     {
       index: "01",
       title: "UE5 Field Level Design",
-      status: "IN PROGRESS",
+      status: "3D VIEW AVAILABLE",
       role: "직무 요구사항 기반 자체 제작 과제로 설계하는 고정 쿼터뷰 MMORPG Field.",
       tags: ["LANDMARK", "CHOICE", "OBJECT", "TRANSITION"],
-      links: [
-        // 완료 후 연결:
-        // { label: "PDF", href: "./assets/docs/field.pdf", primary: true },
-        // { label: "VIDEO", href: "https://..." }
-      ]
+      links: [{ label: "3D VIEW", href: "#viewer", primary: true }, { label: "EXPLORE", href: "#play" }]
     },
     {
       index: "02",
       title: "UE5 Dungeon Level Design",
-      status: "3D VIEW AVAILABLE",
+      status: "WEB PLAY",
       role: "START → END까지 플레이 가능한 UE5 쿼터뷰 Dungeon의 공간·기믹·시야·검증 작업.",
       tags: ["PLAYABLE LEVEL", "UE5", "PLAYTEST", "DATA"],
       links: [
-        { label: "3D VIEW", href: "#viewer", primary: true }
+        { label: "WEB PLAY", href: "#play", primary: true },
+        { label: "REFERENCE VIDEO", href: "https://youtu.be/d1TWflW1VhE" }
         // PDF / Video가 준비되면 추가:
         // { label: "PDF", href: "./assets/docs/dungeon.pdf" },
         // { label: "VIDEO", href: "https://..." }

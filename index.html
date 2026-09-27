@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&amp;family=Noto+Serif+KR:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./css/style.css?v=9">
+  <link rel="stylesheet" href="./css/style.css?v=10">
   <link rel="stylesheet" href="./css/briefing-letter.css?v=5">
 </head>
 <body class="mission-lock">
@@ -83,6 +83,7 @@
     </a>
 
     <nav class="nav" aria-label="Main navigation">
+      <a href="#play">PLAY</a>
       <a href="#viewer">3D VIEW</a>
       <a href="#portfolio">PORTFOLIO</a>
       <a href="#about">ABOUT</a>
@@ -111,6 +112,13 @@
       </div>
     </section>
 
+    <section id="play" class="section play-section">
+      <div class="section-head"><div><p class="section-index">01</p><h2>Explore the Cathedral</h2></div><p class="section-desc">실제 UE5 필드와 보수된 던전 모델을 걸으며 공간과 기믹을 확인하세요.</p></div>
+      <div class="play-toolbar"><button type="button" id="play-field">필드에서 시작</button><button type="button" id="play-dungeon">던전 바로 시작</button><button type="button" id="play-reset">처음부터</button><span id="play-hp">HP 100</span></div>
+      <div class="play-layout"><div class="play-stage"><canvas id="play-canvas" tabindex="0" aria-label="플레이 가능한 필드와 던전"></canvas><div id="play-status" class="play-status">시작할 맵을 선택하세요</div><div id="play-prompt" class="play-prompt">WASD · 이동 / J · 공격 / E · 상호작용</div></div><aside class="play-aside"><div id="play-information"><h3>지도 밖에서도 살펴보기</h3><p>아래 지역 이름을 눌러 공간 의도와 기믹을 읽을 수 있습니다.</p></div><div class="play-regions"><button type="button" data-region="field">외부 필드</button><button type="button" data-region="bridge">약한 다리</button><button type="button" data-region="door">중간보스 문</button><button type="button" data-region="stairs">계단과 레버</button><button type="button" data-region="puzzle">색 순서 장치</button></div><p id="play-log" role="status">카메라는 고정 쿼터뷰로 플레이어를 따라갑니다.</p></aside></div>
+      <p class="play-note">웹 플레이는 제공된 모델·좌표·규칙을 바탕으로 재구성했습니다. UE의 캡슐 충돌 및 전투 AI와 완전히 동일하지 않으며 필드 입구는 최신 보수 던전 v02로 연결됩니다.</p>
+    </section>
+
     <section id="viewer" class="section viewer-section">
       <div class="section-head">
         <div>
@@ -118,7 +126,7 @@
           <h2>Spatial Viewer</h2>
         </div>
         <p class="section-desc">
-          실제 UE5 Graybox GLB를 직접 회전·확대하며 공간 구조를 확인하는 보조 뷰어.
+          실제 UE5 맵을 자유롭게 회전·확대하며 공간 구조를 확인하는 보조 뷰어.
         </p>
       </div>
 
@@ -198,6 +206,6 @@
   </footer>
 
   <script src="./js/mission-briefing.js?v=7"></script>
-  <script type="module" src="./js/app.js?v=2"></script>
+  <script type="module" src="./js/app.js?v=3"></script>
 </body>
 </html>

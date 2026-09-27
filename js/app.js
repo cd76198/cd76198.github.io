@@ -102,6 +102,14 @@ function escapeAttr(value='') {
 
 renderProfile();
 renderProjects();
+let playLoaded=false;
+async function loadPlay(){
+  if(playLoaded)return;playLoaded=true;
+  try { await import('./play.js?v=1'); }
+  catch(error){playLoaded=false;document.getElementById('play-status').textContent='플레이 화면을 불러오지 못했습니다.';console.error(error)}
+}
+document.querySelectorAll('a[href="#play"],#play-field,#play-dungeon').forEach(link=>link.addEventListener('pointerdown',loadPlay,{once:true}));
+new IntersectionObserver((entries,observer)=>{if(entries.some(e=>e.isIntersecting)){loadPlay();observer.disconnect()}},{rootMargin:'250px'}).observe(document.getElementById('play'));
 // The first screen is the briefing. Do not compete with it for network or GPU work.
 async function loadSpatialViewer() {
   try {
