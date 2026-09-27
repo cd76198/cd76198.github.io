@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { fieldNotes } from './field-notes.js';
+import { fieldNotes } from './field-notes.js?v=2';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 const root = document.getElementById('play');
@@ -97,7 +97,7 @@ async function openMap(which){
   prepareWallFade();
   position.set(...metadata.maps[map].spawn);lastSafe.copy(position);player.position.copy(position);
   camera.fov=2*THREE.MathUtils.radToDeg(Math.atan(Math.tan(Math.PI/8)/camera.aspect));camera.updateProjectionMatrix();
-  markerGroup.children.forEach(m=>{m.material.map?.dispose();m.material.dispose();m.geometry?.dispose()});markerGroup.clear();points[map].forEach((p,i)=>{const m=map==='field'?new THREE.Sprite(new THREE.SpriteMaterial({map:markerTexture(i+1),transparent:true,depthTest:true})):new THREE.Mesh(new THREE.SphereGeometry(.35,12,8),new THREE.MeshStandardMaterial({color:0xe5b66b,emissive:0x81501e,emissiveIntensity:.7}));if(map==='field')m.scale.set(2.2,2.2,1);ray.set(new THREE.Vector3(p.x,100,p.z),down);ray.far=200;const floors=ray.intersectObjects(surfaces.filter(active),false);m.userData.baseY=(floors.find(hit=>hit.face?.normal?.clone().transformDirection(hit.object.matrixWorld).y>=.71)?.point.y??position.y)+(map==='field'?1.8:1.2);m.position.set(p.x,m.userData.baseY,p.z);m.userData.index=i;markerGroup.add(m)});
+  markerGroup.children.forEach(m=>{m.material.map?.dispose();m.material.dispose();m.geometry?.dispose()});markerGroup.clear();points[map].forEach((p,i)=>{const m=map==='field'?new THREE.Sprite(new THREE.SpriteMaterial({map:markerTexture(i+1),transparent:true,depthTest:true})):new THREE.Mesh(new THREE.SphereGeometry(.35,12,8),new THREE.MeshStandardMaterial({color:0xe5b66b,emissive:0x81501e,emissiveIntensity:.7}));if(map==='field')m.scale.set(2.2,2.2,1);m.userData.baseY=map==='field'?p.floorY+1.8:position.y+1.2;m.position.set(p.x,m.userData.baseY,p.z);m.userData.index=i;markerGroup.add(m)});
   shownPoint=-1;information.replaceChildren();restartState();
   status.hidden=true;running=true;say(map==='field'?'성당 입구를 찾아 이동하세요.':'던전의 흔적과 장치를 조사하세요.');root.scrollIntoView({behavior:'smooth',block:'start'});
 }
@@ -157,7 +157,7 @@ function update(dt){
   if(attackAge<.25){attackAge+=dt;slash.visible=true;slash.position.set(position.x,position.y-.6,position.z);slash.rotation.y=Math.atan2(-facing.z,facing.x)-.5+attackAge*4;slash.material.opacity=Math.max(0,.9*(1-attackAge/.25));}else slash.visible=false;
   const o=metadata.maps[map].cameraOffset;camera.position.set(position.x+o[0],position.y+o[1],position.z+o[2]);camera.lookAt(position);
   updateWallFade(dt);
-  pulse+=dt;markerGroup.children.forEach((m,i)=>{const p=points[map][i];m.visible=p.title!=='다리 복구 레버'||game.lever;m.position.y=m.userData.baseY+Math.sin(pulse*2+i)*.08});
+  pulse+=dt;markerGroup.children.forEach((m,i)=>{const p=points[map][i];m.visible=p.title!=='다리 복구 레버'||game.lever;m.position.y=(map==='field'?m.userData.baseY:(floorAt(p.x,p.z,position.y)??position.y)+1.2)+Math.sin(pulse*2+i)*.08});
   const close=points[map].find(p=>(p.title!=='다리 복구 레버'||game.lever)&&distance(p.x,p.z)<4);prompt.textContent=map==='field'?(close?'지역 설명 · '+close.title:'WASD · 이동'):close?'E · '+close.title:'J / 클릭 · 공격     E · 조작';
   if(map==='field' && close && shownPoint!==points.field.indexOf(close)){shownPoint=points.field.indexOf(close);setInfo(close.title,close.body)}
   if(map==='field'){const t=metadata.transition.bounds_ue_cm;if(position.x>t.x_open[0]/100 && position.x<t.x_open[1]/100 && Math.abs(position.z)<4.8 && position.y>t.z_open[0]/100-1 && position.y<t.z_open[1]/100+1)openMap('dungeon');return}
