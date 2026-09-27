@@ -1,6 +1,6 @@
-import * as THREE from 'https://esm.sh/three@0.180.0';
-import { OrbitControls } from 'https://esm.sh/three@0.180.0/examples/jsm/controls/OrbitControls.js';
-import { GLTFLoader } from 'https://esm.sh/three@0.180.0/examples/jsm/loaders/GLTFLoader.js';
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 export function initSpatialViewer(models) {
   const canvas = document.getElementById('viewer-canvas');
