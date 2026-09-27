@@ -1,0 +1,71 @@
+/* The letter art is paired with selectable, accessible HTML text. */
+.mission-stage{width:100vw;height:100svh}
+.mission-prompt{top:max(2.5%,env(safe-area-inset-top));gap:0}
+.mission-prompt span{font-family:"Noto Serif KR",serif;font-size:12px;letter-spacing:.12em}
+.mission-prompt strong{font-family:"Noto Serif KR",serif;font-size:17px;font-weight:500}
+.mission-prompt i{font-size:25px}
+.mission-sealed,.mission-open{
+  width:min(92vw,460px,calc(86svh * 1157 / 1360));
+  height:auto;
+  aspect-ratio:1157 / 1360;
+}
+.mission-sealed{top:50%;transform:translateY(-46%);animation:letter-sealed-in .45s ease both}
+.mission-open{top:50%;transform:translateY(-50%) scale(.96);clip-path:none}
+.mission-open>img{object-fit:fill}
+.mission-copy{
+  position:absolute;
+  top:17.5%;left:14%;
+  width:70%;height:61%;max-height:none;
+  margin:0;padding:0 3px 4px;
+  overflow-y:auto;overscroll-behavior:contain;
+  scrollbar-width:thin;scrollbar-color:#9d7b5166 transparent;
+  color:#493327;
+  font-family:"Noto Serif KR","Batang",serif;
+  font-size:clamp(11px,1.35svh,13px);
+  font-weight:500;line-height:1.68;
+  word-break:keep-all;text-align:left;
+}
+.mission-eyebrow{
+  display:block;margin:0 0 9px;padding:0;
+  color:#3b2a20;font-family:inherit;
+  font-size:1.04em;font-weight:700;letter-spacing:0;text-align:left;
+}
+.mission-copy h1{
+  margin:0 0 13px;color:#4b3024;
+  font-family:inherit;font-size:clamp(17px,2.1svh,21px);
+  font-weight:600;letter-spacing:-.04em;line-height:1.45;text-align:left;
+}
+.mission-copy>p:not(.mission-eyebrow){margin:0 0 10px}
+.mission-signature{margin-top:14px!important;color:#725646;font-size:.93em;font-style:italic}
+.mission-start{
+  position:absolute;left:16%;bottom:8.8%;
+  min-height:34px;margin:0;padding:0 3px;
+  color:#604532;font-family:"Noto Serif KR",serif;
+  font-size:clamp(12px,1.5svh,14px);font-weight:700;
+}
+.mission-start:hover .mission-start-label{text-decoration-color:#604532}
+.mission-click{font-size:19px;color:#8c693c;vertical-align:-1px}
+.mission-briefing.is-opening .mission-open,.mission-briefing.is-opened .mission-open{
+  animation:letter-open .32s cubic-bezier(.24,.83,.32,1) both;
+}
+.mission-briefing.is-opened .mission-open{
+  opacity:1;clip-path:none;transform:translateY(-50%) scale(1);pointer-events:auto;
+}
+.mission-briefing.is-opening .mission-copy,.mission-briefing.is-opened .mission-copy{
+  animation:mission-copy-in .18s .1s ease both;
+}
+@keyframes letter-sealed-in{from{opacity:0;transform:translateY(-43%) scale(.95)}to{opacity:1;transform:translateY(-46%) scale(1)}}
+@keyframes letter-open{from{opacity:0;transform:translateY(-48%) scale(.94)}to{opacity:1;transform:translateY(-50%) scale(1)}}
+@media(max-width:600px){
+  .mission-prompt{top:max(6%,env(safe-area-inset-top))}
+  .mission-prompt strong{font-size:15px}
+  .mission-copy{top:17.5%;height:60%;font-size:clamp(10.5px,1.7svh,12.5px)}
+  .mission-copy h1{font-size:clamp(16px,2.3svh,19px)}
+  .mission-start{bottom:8.7%;font-size:11px}
+}
+@media(max-height:620px){
+  .mission-prompt{top:1%}
+  .mission-prompt span,.mission-prompt i{display:none}
+  .mission-sealed,.mission-open{width:min(75vw,calc(83svh * 1157 / 1360))}
+  .mission-copy{font-size:10.5px;line-height:1.5}
+}
