@@ -1,6 +1,6 @@
 export const siteData = {
   profile: {
-    name: "YOUR NAME",
+    name: "신진섭",
     brandName: "LEVEL DESIGNER",
     eyebrow: "LOST ARK MOBILE · LEVEL DESIGN PORTFOLIO",
     title: "Playable Space.\nVisible Decisions.",
