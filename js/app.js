@@ -1,5 +1,5 @@
 import { siteData } from './site-data.js';
-import { fieldNotes } from './field-notes.js?v=2';
+import { fieldNotes, appendNoteParagraph } from './field-notes.js?v=3';
 
 function setText(id, value) {
   const el = document.getElementById(id);
@@ -107,11 +107,7 @@ fieldNotes.forEach((point,index)=>{
     document.getElementById('field-note-title').textContent=point.title;
     const content=document.getElementById('field-note-content');
     content.replaceChildren();
-    for(const line of point.body.split('\n')){
-      const paragraph=document.createElement('p');
-      paragraph.textContent=line;
-      content.append(paragraph);
-    }
+    for(const line of point.body.split('\n'))appendNoteParagraph(content,line,point.highlights);
     fieldNoteDialog.showModal();
   });
   fieldNoteLinks.append(button);
@@ -120,7 +116,7 @@ document.getElementById('field-note-close').addEventListener('click',()=>fieldNo
 let playLoaded=false;
 async function loadPlay(){
   if(playLoaded)return;playLoaded=true;
-  try { await import('./play.js?v=8'); }
+  try { await import('./play.js?v=9'); }
   catch(error){playLoaded=false;document.getElementById('play-status').textContent=/WebGL context/i.test(String(error))?'이 브라우저에서 3D 플레이를 사용할 수 없습니다.':'플레이 화면을 불러오지 못했습니다. 새로고침해 주세요.';console.error(error)}
 }
 document.querySelectorAll('a[href="#play"],#play-field,#play-dungeon').forEach(link=>link.addEventListener('pointerdown',loadPlay,{once:true}));

@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { fieldNotes } from './field-notes.js?v=2';
+import { fieldNotes, appendNoteParagraph } from './field-notes.js?v=3';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 const root = document.getElementById('play');
@@ -36,7 +36,7 @@ const points = {
   dungeon:[{x:0,z:-12,title:'던전 진입',body:'선발대의 경로를 따라 다리와 문, 계단, 색 순서 장치를 조사합니다.'},{x:52.5,z:11,title:'약한 다리',body:'공격 8회로 다리를 파괴할 수 있으며, 레버에서 복구합니다.'},{x:63,z:11,title:'중간보스 문',body:'문 근처에서 E를 5초 동안 눌러 개방합니다.'},{x:79,z:11,title:'계단',body:'중간보스 처치 후 차단막이 자동으로 열려 아래층으로 내려갈 수 있습니다.'},{x:91.5,z:11,title:'다리 복구 레버',body:'중간보스 처치 후 나타나는 레버입니다. E로 무너진 다리를 복구합니다.'},{x:53.75,z:1.5,title:'색 순서 장치',body:'파랑 → 빨강 → 초록 순서로 누르세요. 오답이면 적 3명이 나타납니다.'}]
 };
 function say(message){log.textContent=message;}
-function setInfo(title,body){information.replaceChildren();const h=document.createElement('h3');h.textContent=title;information.append(h);for(const line of body.split('\n')){const p=document.createElement('p');p.textContent=line;information.append(p)}}
+function setInfo(title,body,highlights=[]){information.replaceChildren();const h=document.createElement('h3');h.textContent=title;information.append(h);for(const line of body.split('\n'))appendNoteParagraph(information,line,highlights)}
 let shownPoint=-1;
 function markerTexture(number){const c=document.createElement('canvas');c.width=c.height=128;const ctx=c.getContext('2d');ctx.beginPath();ctx.arc(64,64,55,0,Math.PI*2);ctx.fillStyle='#e9c88c';ctx.fill();ctx.lineWidth=7;ctx.strokeStyle='#74492e';ctx.stroke();ctx.fillStyle='#34231a';ctx.font='bold 72px "Noto Sans KR",sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(String(number),64,67);const texture=new THREE.CanvasTexture(c);texture.colorSpace=THREE.SRGBColorSpace;return texture}
 function object(name){let found=null; visual?.traverse(o=>{if(!found && (o.userData?.ue_actor_name===name || o.name===name))found=o});return found;}
@@ -102,7 +102,9 @@ async function openMap(which){
   status.hidden=true;running=true;say(map==='field'?'성당 입구를 찾아 이동하세요.':'던전의 흔적과 장치를 조사하세요.');root.scrollIntoView({behavior:'smooth',block:'start'});
 }
 function active(mesh){for(let o=mesh;o;o=o.parent)if(!o.visible)return false;return true}
-function floorAt(x,z,fromY){ray.set(new THREE.Vector3(x,fromY+.6,z),down);ray.far=3;let hits=ray.intersectObjects(surfaces.filter(active),false);for(const hit of hits){const n=hit.face?.normal?.clone().transformDirection(hit.object.matrixWorld);if(n?.y>=.71 && hit.point.y<=fromY+.45)return hit.point.y}return null}
+const stepHeight=.56;
+function floorAt(x,z,fromY){ray.set(new THREE.Vector3(x,fromY+stepHeight+.16,z),down);ray.far=3;let hits=ray.intersectObjects(surfaces.filter(active),false);for(const hit of hits){const n=hit.face?.normal?.clone().transformDirection(hit.object.matrixWorld);if(n?.y>=.71 && hit.point.y<=fromY+stepHeight)return hit.point.y}return null}
+function stairTread(mesh){const name=[mesh.userData?.ue_actor_name,mesh.userData?.ue_actor_label,mesh.name].filter(Boolean).join(' ');return /기존계단보존|왼쪽진입계단|StairB_F[12]_|StairD_\d|TransformStair_Step/.test(name)}
 function blocked(start,delta,nextFloor,halfHeight=.9){
   if(delta.lengthSq()<1e-10)return false;
   const direction=delta.clone().normalize(),oldFloor=start.y-halfHeight;
@@ -113,8 +115,8 @@ function blocked(start,delta,nextFloor,halfHeight=.9){
     for(const hit of ray.intersectObjects(solids.filter(active),false)){
       const n=hit.face?.normal?.clone().transformDirection(hit.object.matrixWorld);
       if(!n||Math.abs(n.y)>=.71||hit.distance>=ray.far)continue;
-      // A riser is passable when its own top is a support surface within the UE step height.
-      if(stepFloor>oldFloor+.02 && stepFloor<=oldFloor+.451 && hit.object.userData.walkMaxY<=stepFloor+.07)continue;
+      // A short stair riser may belong to a taller stair mesh, so its full bounding box is not a reliable step test.
+      if(stepFloor>oldFloor+.02 && stepFloor<=oldFloor+stepHeight && hit.point.y<=stepFloor+.08 && (hit.object.userData.walkMaxY<=stepFloor+.1 || stairTread(hit.object)))continue;
       return true;
     }
   }
@@ -123,7 +125,7 @@ function blocked(start,delta,nextFloor,halfHeight=.9){
 function tryMove(dx,dz){
   const x=position.x+dx,z=position.z+dz;
   const floor=floorAt(x,z,position.y-.9);
-  if(floor===null||floor>position.y-.9+.451||blocked(position,new THREE.Vector3(dx,0,dz),floor))return false;
+  if(floor===null||floor>position.y-.9+stepHeight||blocked(position,new THREE.Vector3(dx,0,dz),floor))return false;
   position.set(x,floor+.9,z);lastSafe.copy(position);return true;
 }
 function moveStep(dx,dz){
@@ -142,7 +144,7 @@ function doAttack(){if(!running||game.finished||performance.now()/1000<game.atta
   if(objDist('P02_BridgeWeakSection_Deck')<4.5 && position.x>=56 && !game.bridgeBroken){game.bridgeHits++;say('약한 다리 타격 '+game.bridgeHits+'/8');if(game.bridgeHits>=8){game.bridgeBroken=true;['P02_BridgeWeakSection_Deck','P02_BridgeWeakSection_RailS','P02_BridgeWeakSection_RailN'].forEach(n=>hide(n,false));game.chaserStopped=true;enemies.filter(e=>e.kind==='chaser').forEach(e=>{scene.remove(e.mesh);enemies.splice(enemies.indexOf(e),1)});game.respawn.set(61,4.3,11);say('다리가 무너졌습니다. 추격이 끝났습니다.')}}
 }
 function interact(){if(!running||game.finished)return;
-  const near=points[map].find(p=>(p.title!=='다리 복구 레버'||game.lever)&&distance(p.x,p.z)<4);if(near){setInfo(near.title,near.body);if(map==='field' && near.x===215 && position.x>215.4){openMap('dungeon');return}}
+  const near=points[map].find(p=>(p.title!=='다리 복구 레버'||game.lever)&&distance(p.x,p.z)<4);if(near){setInfo(near.title,near.body,near.highlights);if(map==='field' && near.x===215 && position.x>215.4){openMap('dungeon');return}}
   if(map!=='dungeon')return;
   if(game.lever && objDist('MCP_TEST_MidBossInteraction')<3){game.bridgeBroken=false;game.bridgeHits=0;['P02_BridgeWeakSection_Deck','P02_BridgeWeakSection_RailS','P02_BridgeWeakSection_RailN'].forEach(n=>hide(n,true));say('레버로 다리를 복구했습니다.');return}
   for(const [name,color] of [['P02_ColorPad_Blue','파랑'],['P02_ColorPad_Red','빨강'],['P02_ColorPad_Green','초록']]){
@@ -159,7 +161,7 @@ function update(dt){
   updateWallFade(dt);
   pulse+=dt;markerGroup.children.forEach((m,i)=>{const p=points[map][i];m.visible=p.title!=='다리 복구 레버'||game.lever;m.position.y=(map==='field'?m.userData.baseY:(floorAt(p.x,p.z,position.y)??position.y)+1.2)+Math.sin(pulse*2+i)*.08});
   const close=points[map].find(p=>(p.title!=='다리 복구 레버'||game.lever)&&distance(p.x,p.z)<4);prompt.textContent=map==='field'?(close?'지역 설명 · '+close.title:'WASD · 이동'):close?'E · '+close.title:'J / 클릭 · 공격     E · 조작';
-  if(map==='field' && close && shownPoint!==points.field.indexOf(close)){shownPoint=points.field.indexOf(close);setInfo(close.title,close.body)}
+  if(map==='field' && close && shownPoint!==points.field.indexOf(close)){shownPoint=points.field.indexOf(close);setInfo(close.title,close.body,close.highlights)}
   if(map==='field'){const t=metadata.transition.bounds_ue_cm;if(position.x>t.x_open[0]/100 && position.x<t.x_open[1]/100 && Math.abs(position.z)<4.8 && position.y>t.z_open[0]/100-1 && position.y<t.z_open[1]/100+1)openMap('dungeon');return}
   if(!game.chaserStopped && position.x>=48 && !enemies.some(e=>e.kind==='chaser'))spawnChaser();
   if(!game.door && objDist('P02_MidBossDoor')<2.5 && held.has('e')){game.doorHold+=dt;prompt.textContent='문 개방 '+Math.floor(game.doorHold/5*100)+'% · E 유지';if(game.doorHold>=5){game.door=true;hide('P02_MidBossDoor',false);game.respawn.set(61,4.3,11);say('중간보스 문이 열렸습니다.')}}else game.doorHold=0;
