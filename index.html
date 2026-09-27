@@ -6,13 +6,13 @@
   <meta name="description" content="Level Design Portfolio">
   <title>Level Design Portfolio</title>
   <link rel="icon" href="data:,">
-  <link rel="preload" as="image" href="./assets/images/mission-letter-sealed.webp" fetchpriority="high">
-  <link rel="preload" as="image" href="./assets/images/mission-letter-open.webp" fetchpriority="high">
+  <link rel="preload" as="image" href="./assets/images/mission-envelope.webp" fetchpriority="high">
+  <link rel="preload" as="image" href="./assets/images/mission-letter-wide.webp" fetchpriority="high">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&amp;family=Noto+Serif+KR:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./css/style.css?v=9">
-  <link rel="stylesheet" href="./css/briefing-letter.css?v=2">
+  <link rel="stylesheet" href="./css/briefing-letter.css?v=3">
 </head>
 <body class="mission-lock">
   <section id="mission-briefing" class="mission-briefing is-sealed" role="dialog" aria-modal="true" aria-labelledby="mission-title">
@@ -21,28 +21,28 @@
     <div class="mission-stage">
       <div class="mission-prompt">
         <span>새 지령이 도착했습니다</span>
-        <strong>봉인된 편지를 열어보세요</strong>
+        <strong>편지봉투를 열어보세요</strong>
         <i aria-hidden="true">⬇</i>
       </div>
 
-      <button id="mission-sealed" class="mission-sealed" type="button" aria-label="봉인된 편지 열기">
-        <img src="./assets/images/mission-letter-sealed.webp" width="1157" height="1360" fetchpriority="high" alt="금색 문양과 인장이 찍힌 봉인된 편지">
+      <button id="mission-sealed" class="mission-sealed" type="button" aria-label="편지봉투 열기">
+        <img src="./assets/images/mission-envelope.webp" width="1615" height="974" fetchpriority="high" alt="금색 인장으로 봉인된 갈색 편지봉투">
       </button>
 
       <article class="mission-open" aria-hidden="true">
-        <img src="./assets/images/mission-letter-open.webp" width="1157" height="1360" fetchpriority="high" alt="">
+        <img class="mission-envelope-back" src="./assets/images/mission-envelope.webp" width="1615" height="974" alt="">
+        <img class="mission-paper" src="./assets/images/mission-letter-wide.webp" width="1362" height="1155" fetchpriority="high" alt="">
         <div class="mission-copy">
           <p class="mission-eyebrow">모험가님께.</p>
           <h1 id="mission-title">잊혀진 신의 성당</h1>
-          <p>기록에서 이름이 지워진 신을 섬기던 교단의 성당에서 선발대가 연락을 끊었습니다. 성당 외부의 진지와 순례길은 오래전부터 방치되어 있었습니다.</p>
-          <p>토벌대의 임시 진입로와 붕괴된 순례자의 계단을 따라 선발대의 마지막 이동 경로를 확인해 주십시오. 두 길은 성당 정면의 단일 입구에서 만납니다.</p>
-          <p>내부에 남아 있을 의식 시설과 장치를 조사하고, 발견한 기록은 보존해 주십시오. 교단에 관한 기존 기록은 대부분 소실되었습니다.</p>
-          <p>현장에서 직접 확인한 사실을 우선하여, 조사 결과를 보고해 주시기 바랍니다.</p>
+          <p>기록에서 이름이 지워진 신을 섬기던 성당에 진입한 선발대가 연락을 끊었습니다.</p>
+          <p>토벌대의 임시 진입로와 옛 순례자의 계단은 정면 입구로 이어집니다. 두 길을 살피며 선발대의 마지막 경로를 확인해 주십시오.</p>
+          <p>성당 내부의 의식 시설과 장치를 조사하고 발견한 기록을 보존하십시오. 기존 보고와 다르다면 현장에서 확인한 사실을 우선해 주십시오.</p>
           <p class="mission-signature">후속 조사 지령서</p>
         </div>
-          <button id="mission-start" class="mission-start" type="button">
-            <span class="mission-start-label">포트폴리오 보기 <span class="mission-click">›</span></span>
-          </button>
+        <button id="mission-start" class="mission-start" type="button" aria-label="인장을 눌러 편지를 접고 포트폴리오 보기">
+          <span class="mission-start-label">포트폴리오 보기</span>
+        </button>
       </article>
     </div>
   </section>
@@ -172,7 +172,7 @@
     <span>STATIC SITE · GITHUB PAGES READY</span>
   </footer>
 
-  <script src="./js/mission-briefing.js?v=6"></script>
+  <script src="./js/mission-briefing.js?v=7"></script>
   <script type="module" src="./js/app.js?v=2"></script>
 </body>
 </html>
