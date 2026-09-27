@@ -1,71 +1,102 @@
-/* The letter art is paired with selectable, accessible HTML text. */
+/* Paper and envelope remain separate so the seal can be an accessible button. */
 .mission-stage{width:100vw;height:100svh}
-.mission-prompt{top:max(2.5%,env(safe-area-inset-top));gap:0}
+.mission-prompt{top:max(6%,env(safe-area-inset-top));gap:0}
 .mission-prompt span{font-family:"Noto Serif KR",serif;font-size:12px;letter-spacing:.12em}
 .mission-prompt strong{font-family:"Noto Serif KR",serif;font-size:17px;font-weight:500}
 .mission-prompt i{font-size:25px}
-.mission-sealed,.mission-open{
-  width:min(92vw,460px,calc(86svh * 1157 / 1360));
-  height:auto;
-  aspect-ratio:1157 / 1360;
+.mission-sealed{
+  top:50%;width:min(90vw,740px,calc(65svh * 1615 / 974));
+  height:auto;aspect-ratio:1615 / 974;
+  transform:translateY(-45%);
+  animation:envelope-arrive .45s ease both;
 }
-.mission-sealed{top:50%;transform:translateY(-46%);animation:letter-sealed-in .45s ease both}
-.mission-open{top:50%;transform:translateY(-50%) scale(.96);clip-path:none}
-.mission-open>img{object-fit:fill}
+.mission-sealed img{width:100%;height:100%;object-fit:contain}
+.mission-open{
+  top:50%;width:min(94vw,760px,calc(80svh * 1362 / 1155));
+  height:auto;aspect-ratio:1362 / 1155;
+  clip-path:none;transform:translateY(-50%) scale(.96);
+  filter:drop-shadow(0 25px 28px #0009);
+}
+.mission-open>.mission-paper{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:fill;z-index:1;
+}
+.mission-open>.mission-envelope-back{
+  position:absolute;width:116%;height:auto;left:-8%;top:13%;z-index:0;
+  object-fit:contain;filter:brightness(.87);
+}
 .mission-copy{
-  position:absolute;
-  top:17.5%;left:14%;
-  width:70%;height:61%;max-height:none;
-  margin:0;padding:0 3px 4px;
+  position:absolute;top:31%;left:9%;z-index:2;
+  width:79%;height:46%;max-height:none;
+  margin:0;padding:0 3px 3px;
   overflow-y:auto;overscroll-behavior:contain;
   scrollbar-width:thin;scrollbar-color:#9d7b5166 transparent;
-  color:#493327;
-  font-family:"Noto Serif KR","Batang",serif;
-  font-size:clamp(10.8px,1.25svh,12px);
-  font-weight:500;line-height:1.56;
+  color:#493327;font-family:"Noto Serif KR","Batang",serif;
+  font-size:clamp(11px,1.35svh,14px);font-weight:500;line-height:1.65;
   word-break:keep-all;text-align:left;
 }
 .mission-eyebrow{
-  display:block;margin:0 0 6px;padding:0;
-  color:#3b2a20;font-family:inherit;
-  font-size:1.04em;font-weight:700;letter-spacing:0;text-align:left;
+  display:block;margin:0 0 5px;padding:0;color:#3b2a20;
+  font-family:inherit;font-size:1.02em;font-weight:700;letter-spacing:0;text-align:left;
 }
 .mission-copy h1{
-  margin:0 0 8px;color:#4b3024;
-  font-family:inherit;font-size:clamp(17px,2.1svh,21px);
-  font-weight:600;letter-spacing:-.04em;line-height:1.45;text-align:left;
+  margin:0 0 9px;color:#4b3024;font-family:inherit;
+  font-size:clamp(17px,2.1svh,21px);font-weight:600;
+  letter-spacing:-.04em;line-height:1.35;text-align:left;
 }
 .mission-copy>p:not(.mission-eyebrow){margin:0 0 7px}
-.mission-signature{margin-top:9px!important;color:#725646;font-size:.93em;font-style:italic}
+.mission-signature{margin-top:8px!important;color:#725646;font-size:.93em;font-style:italic}
 .mission-start{
-  position:absolute;left:16%;bottom:8.8%;
-  min-height:34px;margin:0;padding:0 3px;
-  color:#604532;font-family:"Noto Serif KR",serif;
-  font-size:clamp(12px,1.5svh,14px);font-weight:700;
+  position:absolute;z-index:3;right:3.2%;bottom:17.3%;
+  width:12%;height:12%;min-height:0;margin:0;padding:0;
+  border:0;border-radius:50%;background:transparent;cursor:pointer;
 }
-.mission-start:hover .mission-start-label{text-decoration-color:#604532}
-.mission-click{font-size:19px;color:#8c693c;vertical-align:-1px}
+.mission-start-label{
+  position:absolute;right:106%;top:50%;transform:translateY(-50%);
+  color:#604532;font-family:"Noto Serif KR",serif;
+  font-size:clamp(10px,1.4svh,13px);font-weight:700;
+  line-height:1.3;white-space:nowrap;text-align:right;
+  text-decoration:underline;text-underline-offset:3px;
+}
+.mission-start:hover,.mission-start:focus-visible{box-shadow:0 0 0 3px #a37336bb,0 0 15px #e2b46f88}
+.mission-start:focus-visible{outline:2px solid #533520;outline-offset:5px}
 .mission-briefing.is-opening .mission-open,.mission-briefing.is-opened .mission-open{
-  animation:letter-open .32s cubic-bezier(.24,.83,.32,1) both;
+  animation:letter-open .34s cubic-bezier(.24,.83,.32,1) both;
 }
 .mission-briefing.is-opened .mission-open{
   opacity:1;clip-path:none;transform:translateY(-50%) scale(1);pointer-events:auto;
 }
 .mission-briefing.is-opening .mission-copy,.mission-briefing.is-opened .mission-copy{
-  animation:mission-copy-in .18s .1s ease both;
+  animation:mission-copy-in .2s .1s ease both;
 }
-@keyframes letter-sealed-in{from{opacity:0;transform:translateY(-43%) scale(.95)}to{opacity:1;transform:translateY(-46%) scale(1)}}
-@keyframes letter-open{from{opacity:0;transform:translateY(-48%) scale(.94)}to{opacity:1;transform:translateY(-50%) scale(1)}}
+.mission-briefing.is-folding .mission-prompt{opacity:0}
+.mission-briefing.is-folding .mission-copy,.mission-briefing.is-folding .mission-start{pointer-events:none;opacity:0}
+.mission-briefing.is-folding .mission-open{
+  animation:letter-fold .38s ease-in both;pointer-events:none;
+}
+.mission-briefing.is-folding .mission-sealed{
+  animation:envelope-return .38s ease-in-out both;pointer-events:none;
+}
+@keyframes envelope-arrive{from{opacity:0;transform:translateY(-42%) scale(.95)}to{opacity:1;transform:translateY(-45%) scale(1)}}
+@keyframes envelope-return{0%,45%{opacity:0;transform:translateY(-45%) scale(.96)}100%{opacity:1;transform:translateY(-45%) scale(1)}}
+@keyframes letter-open{from{opacity:0;transform:translateY(-45%) scale(.84)}to{opacity:1;transform:translateY(-50%) scale(1)}}
+@keyframes letter-fold{0%{opacity:1;transform:translateY(-50%) scale(1)}60%{opacity:1;transform:translateY(-43%) scaleY(.15)}100%{opacity:0;transform:translateY(-43%) scale(.75,.08)}}
 @media(max-width:600px){
   .mission-prompt{top:max(6%,env(safe-area-inset-top))}
   .mission-prompt strong{font-size:15px}
-  .mission-copy{top:17.5%;height:60%;font-size:clamp(10.2px,1.6svh,11.5px)}
-  .mission-copy h1{font-size:clamp(16px,2.3svh,19px)}
-  .mission-start{bottom:8.7%;font-size:11px}
+  .mission-open{width:min(96vw,calc(76svh * 1362 / 1155))}
+  .mission-sealed{width:94vw}
+  .mission-copy{top:30%;height:48%;font-size:clamp(9.5px,1.55svh,11px);line-height:1.48}
+  .mission-copy h1{font-size:clamp(15px,2.3svh,18px);margin-bottom:5px}
+  .mission-copy>p:not(.mission-eyebrow){margin-bottom:4px}
+  .mission-start-label{font-size:10px}
 }
 @media(max-height:620px){
   .mission-prompt{top:1%}
   .mission-prompt span,.mission-prompt i{display:none}
-  .mission-sealed,.mission-open{width:min(75vw,calc(83svh * 1157 / 1360))}
-  .mission-copy{font-size:10.5px;line-height:1.5}
+  .mission-open{width:min(85vw,calc(88svh * 1362 / 1155))}
+  .mission-sealed{width:min(75vw,calc(78svh * 1615 / 974))}
+  .mission-copy{font-size:10.5px;line-height:1.45}
+}
+@media(prefers-reduced-motion:reduce){
+  .mission-briefing.is-folding .mission-open,.mission-briefing.is-folding .mission-sealed{animation-duration:.01ms}
 }
