@@ -1,5 +1,5 @@
 (() => {
-  const sessionKey = 'level-portfolio-mission-briefing-seen';
+  const sessionKey = 'level-portfolio-mission-letter-v2-seen';
   const briefing = document.getElementById('mission-briefing');
   const sealed = document.getElementById('mission-sealed');
   const start = document.getElementById('mission-start');
