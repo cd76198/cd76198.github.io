@@ -57,7 +57,7 @@ async function openMap(which){
   map=which;visual=rendered.scene;collision=physical.scene;scene.add(visual);
   visual.traverse(o=>{if(o.userData?.initially_hidden)o.visible=false});
   collision.updateMatrixWorld(true);surfaces=[];solids=[];
-  collision.traverse(o=>{if(o.isMesh){o.material.side=THREE.DoubleSide;surfaces.push(o);solids.push(o)}});
+  collision.traverse(o=>{if(o.isMesh){for(const material of Array.isArray(o.material)?o.material:[o.material])material.side=THREE.DoubleSide;surfaces.push(o);solids.push(o)}});
   position.set(...metadata.maps[map].spawn);lastSafe.copy(position);player.position.copy(position);
   camera.fov=2*THREE.MathUtils.radToDeg(Math.atan(Math.tan(Math.PI/8)/camera.aspect));camera.updateProjectionMatrix();
   markerGroup.clear();points[map].forEach((p,i)=>{const m=new THREE.Mesh(new THREE.SphereGeometry(.35,12,8),new THREE.MeshStandardMaterial({color:0xe5b66b,emissive:0x81501e,emissiveIntensity:.7}));m.position.set(p.x,position.y+1,p.z);m.userData.index=i;markerGroup.add(m)});
@@ -74,7 +74,7 @@ function spawnChaser(){const p=metadata.maps.dungeon.objects.P02_MidBossEnemySpa
 function doAttack(){if(!running||game.finished||performance.now()/1000<game.attackTime||held.has('e'))return;game.attackTime=performance.now()/1000+.35;
   const candidates=enemies.filter(e=>Math.hypot(e.mesh.position.x-position.x,e.mesh.position.z-position.z)<3.1);
   for(const e of candidates){e.hp-=34;e.mesh.material.emissive.setHex(0xffbb60);setTimeout(()=>e.mesh.material.emissive.setHex(0x381339),120);if(e.hp<=0){scene.remove(e.mesh);enemies.splice(enemies.indexOf(e),1);if(e.kind==='boss'){game.bossDead=true;game.lever=true;game.stairTimer=2;hide('MCP_TEST_MidBossInteraction',true);say('중간보스를 처치했습니다. 장치가 곧 가동됩니다.')}else say('적을 처치했습니다.')}}
-  if(objDist('P02_BridgeWeakSection_Deck')<3.5 && position.x>53 && !game.bridgeBroken){game.bridgeHits++;say('약한 다리 타격 '+game.bridgeHits+'/8');if(game.bridgeHits>=8){game.bridgeBroken=true;['P02_BridgeWeakSection_Deck','P02_BridgeWeakSection_RailS','P02_BridgeWeakSection_RailN'].forEach(n=>hide(n,false));game.chaserStopped=true;enemies.filter(e=>e.kind==='chaser').forEach(e=>{scene.remove(e.mesh);enemies.splice(enemies.indexOf(e),1)});game.respawn.set(61,4.3,11);say('다리가 무너졌습니다. 추격이 끝났습니다.')}}
+  if(objDist('P02_BridgeWeakSection_Deck')<4.5 && position.x>=56 && !game.bridgeBroken){game.bridgeHits++;say('약한 다리 타격 '+game.bridgeHits+'/8');if(game.bridgeHits>=8){game.bridgeBroken=true;['P02_BridgeWeakSection_Deck','P02_BridgeWeakSection_RailS','P02_BridgeWeakSection_RailN'].forEach(n=>hide(n,false));game.chaserStopped=true;enemies.filter(e=>e.kind==='chaser').forEach(e=>{scene.remove(e.mesh);enemies.splice(enemies.indexOf(e),1)});game.respawn.set(61,4.3,11);say('다리가 무너졌습니다. 추격이 끝났습니다.')}}
 }
 function interact(){if(!running||game.finished)return;
   const near=points[map].find(p=>distance(p.x,p.z)<4);if(near){setInfo(near.title,near.body);if(map==='field' && near.x===215 && position.x>215.4){openMap('dungeon');return}}
@@ -93,11 +93,11 @@ function update(dt){
   pulse+=dt;markerGroup.children.forEach((m,i)=>{const p=points[map][i];m.position.y=(floorAt(p.x,p.z,position.y)??position.y)+1.2+Math.sin(pulse*2+i)*.17});
   const close=points[map].find(p=>distance(p.x,p.z)<4);prompt.textContent=close?'E · '+close.title:map==='dungeon'?'J / 클릭 · 공격     E · 조작':'WASD · 이동';
   if(map==='field'){const t=metadata.transition.bounds_ue_cm;if(position.x>t.x_open[0]/100 && position.x<t.x_open[1]/100 && Math.abs(position.z)<4.8 && position.y>t.z_open[0]/100-1 && position.y<t.z_open[1]/100+1)openMap('dungeon');return}
-  if(!game.chaserStopped && position.x>=46 && !enemies.some(e=>e.kind==='chaser'))spawnChaser();
+  if(!game.chaserStopped && position.x>=48 && !enemies.some(e=>e.kind==='chaser'))spawnChaser();
   if(!game.door && objDist('P02_MidBossDoor')<2.5 && held.has('e')){game.doorHold+=dt;prompt.textContent='문 개방 '+Math.floor(game.doorHold/5*100)+'% · E 유지';if(game.doorHold>=5){game.door=true;hide('P02_MidBossDoor',false);game.respawn.set(61,4.3,11);say('중간보스 문이 열렸습니다.')}}else game.doorHold=0;
   if(game.stairTimer>0){game.stairTimer-=dt;if(game.stairTimer<=0){game.stairs=true;hide('MCP_TEST_TransformStair_Blocker',false);say('계단 차단막이 열렸습니다.')}}
   if(game.penalty>0){game.penalty-=dt;if(game.penalty<=0 || !enemies.some(e=>e.kind==='penalty')){game.penalty=0;enemies.filter(e=>e.kind==='penalty').forEach(e=>{scene.remove(e.mesh);enemies.splice(enemies.indexOf(e),1)});say('색 순서 장치를 다시 조작할 수 있습니다.')}}
-  for(const e of enemies){const vx=position.x-e.mesh.position.x,vz=position.z-e.mesh.position.z,dist=Math.hypot(vx,vz);if(dist>1.5 && dist<22){e.mesh.position.x+=vx/dist*e.speed*dt;e.mesh.position.z+=vz/dist*e.speed*dt;const y=floorAt(e.mesh.position.x,e.mesh.position.z,e.mesh.position.y);if(y!==null)e.mesh.position.y=y+.8}else if(dist<=1.5 && e.damage && performance.now()/1000>e.attackAt){e.attackAt=performance.now()/1000+1.5;game.hp-=e.damage;hpLabel.textContent='HP '+Math.max(0,game.hp);if(game.hp<=0)respawn()}}
+  for(const e of enemies){const vx=position.x-e.mesh.position.x,vz=position.z-e.mesh.position.z,dist=Math.hypot(vx,vz);if(dist>1.5 && dist<22){e.mesh.position.x+=vx/dist*e.speed*dt;e.mesh.position.z+=vz/dist*e.speed*dt;const y=floorAt(e.mesh.position.x,e.mesh.position.z,e.mesh.position.y);if(y!==null)e.mesh.position.y=y+.8}else if(dist<=1.5 && e.damage && performance.now()/1000>e.attackAt){e.attackAt=performance.now()/1000+1.5;game.hp-=e.damage;game.doorHold=0;hpLabel.textContent='HP '+Math.max(0,game.hp);if(game.hp<=0)respawn()}}
   if(position.y< -16.6)respawn();
   if(game.finalDoor && objDist('P02_EndTrigger')<2.5){game.finished=true;setInfo('조사 완료','성당 내부의 주요 장치와 경로 조사를 마쳤습니다. 다른 지역의 설명도 확인해 보세요.');say('조사 완료 · R로 다시 시작');}
 }

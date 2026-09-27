@@ -111,7 +111,7 @@ document.getElementById('region-close').addEventListener('click',()=>regionDialo
 let playLoaded=false;
 async function loadPlay(){
   if(playLoaded)return;playLoaded=true;
-  try { await import('./play.js?v=2'); }
+  try { await import('./play.js?v=3'); }
   catch(error){playLoaded=false;document.getElementById('play-status').textContent=/WebGL context/i.test(String(error))?'이 브라우저에서 WebGL을 사용할 수 없습니다. 오른쪽 지역 버튼으로 내용을 확인하세요.':'플레이 화면을 불러오지 못했습니다. 새로고침해 주세요.';console.error(error)}
 }
 document.querySelectorAll('a[href="#play"],#play-field,#play-dungeon').forEach(link=>link.addEventListener('pointerdown',loadPlay,{once:true}));
