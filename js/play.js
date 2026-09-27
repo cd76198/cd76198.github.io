@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { fieldNotes, appendNoteParagraph } from './field-notes.js?v=3';
+import { markerTexture } from './marker-texture.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 const root = document.getElementById('play');
@@ -38,7 +39,6 @@ const points = {
 function say(message){log.textContent=message;}
 function setInfo(title,body,highlights=[]){information.replaceChildren();const h=document.createElement('h3');h.textContent=title;information.append(h);for(const line of body.split('\n'))appendNoteParagraph(information,line,highlights)}
 let shownPoint=-1;
-function markerTexture(number){const c=document.createElement('canvas');c.width=c.height=128;const ctx=c.getContext('2d');ctx.beginPath();ctx.arc(64,64,55,0,Math.PI*2);ctx.fillStyle='#e9c88c';ctx.fill();ctx.lineWidth=7;ctx.strokeStyle='#74492e';ctx.stroke();ctx.fillStyle='#34231a';ctx.font='bold 72px "Noto Sans KR",sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(String(number),64,67);const texture=new THREE.CanvasTexture(c);texture.colorSpace=THREE.SRGBColorSpace;return texture}
 function object(name){let found=null; visual?.traverse(o=>{if(!found && (o.userData?.ue_actor_name===name || o.name===name))found=o});return found;}
 function matching(prefix){let nodes=[];visual?.traverse(o=>{if(o.userData?.ue_actor_name?.startsWith(prefix)||o.name.startsWith(prefix))nodes.push(o)});return nodes.filter(o=>!nodes.some(other=>other!==o && other.getObjectById(o.id)));}
 function hide(name,visible){visual?.traverse(o=>{if(o.userData?.ue_actor_name===name || o.name===name)o.visible=visible});collision?.traverse(c=>{if(c.userData?.ue_actor_name===name || c.name===name)c.visible=visible});}

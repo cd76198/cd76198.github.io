@@ -1,12 +1,20 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { fieldNotes } from './field-notes.js?v=3';
+import { dungeonNotes } from './dungeon-notes.js';
+import { markerTexture } from './marker-texture.js';
 
-export function initSpatialViewer(models) {
+export function initSpatialViewer(models,viewerNotes) {
   const canvas = document.getElementById('viewer-canvas');
   const holder = document.getElementById('viewer-stage');
   const statusEl = document.getElementById('viewer-status');
   const switcher = document.getElementById('model-switcher');
+  const markers = new THREE.Group();
+  const pointerRay = new THREE.Raycaster();
+  const pointer = new THREE.Vector2();
+  let pressedAt = null;
+  let visibleNotes = [];
 
   const renderer = new THREE.WebGLRenderer({
     canvas,
@@ -19,6 +27,7 @@ export function initSpatialViewer(models) {
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(45, 1, 0.01, 100000);
+  scene.add(markers);
 
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
@@ -48,6 +57,41 @@ export function initSpatialViewer(models) {
   let radius = 1;
   let originalMaterials = new Map();
   let restoredEnabled = true;
+  let loadRequest = 0;
+
+  function clearMarkers(){
+    markers.children.forEach(sprite=>{sprite.material.map.dispose();sprite.material.dispose()});
+    markers.clear();
+  }
+
+  function setNotes(modelId){
+    clearMarkers();
+    visibleNotes=modelId==='field'?fieldNotes:modelId==='dungeon'?dungeonNotes:[];
+    viewerNotes.setModel(modelId);
+    visibleNotes.forEach((note,index)=>{
+      const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:markerTexture(index+1),transparent:true,depthTest:false,depthWrite:false}));
+      sprite.position.set(note.x,note.floorY+2.5,note.z);
+      sprite.scale.set(4.5,4.5,1);
+      sprite.userData.noteIndex=index;
+      markers.add(sprite);
+    });
+  }
+
+  function pointedMarker(event){
+    const bounds=canvas.getBoundingClientRect();
+    pointer.set((event.clientX-bounds.left)/bounds.width*2-1,-(event.clientY-bounds.top)/bounds.height*2+1);
+    pointerRay.setFromCamera(pointer,camera);
+    return pointerRay.intersectObjects(markers.children,false)[0]?.object;
+  }
+  canvas.addEventListener('pointerdown',event=>{pressedAt={x:event.clientX,y:event.clientY}});
+  canvas.addEventListener('pointerup',event=>{
+    if(event.button!==0||!pressedAt)return;
+    const moved=Math.hypot(event.clientX-pressedAt.x,event.clientY-pressedAt.y);
+    pressedAt=null;
+    if(moved<7){const marker=pointedMarker(event);if(marker)viewerNotes.open(marker.userData.noteIndex)}
+  });
+  canvas.addEventListener('pointercancel',()=>{pressedAt=null});
+  canvas.addEventListener('pointermove',event=>{canvas.style.cursor=pointedMarker(event)?'pointer':'grab'});
 
   const neutralMaterial = new THREE.MeshStandardMaterial({
     color: 0xaeb4bc,
@@ -205,12 +249,15 @@ export function initSpatialViewer(models) {
   function loadModel(modelConfig) {
     if (!modelConfig?.enabled) return;
 
+    const request=++loadRequest;
+    clearMarkers();viewerNotes.setModel(null);visibleNotes=[];
     setStatus(`${modelConfig.label} 불러오는 중…`);
     currentModelId = modelConfig.id;
 
     loader.load(
       modelConfig.path,
       gltf => {
+        if(request!==loadRequest){disposeModel(gltf.scene);return}
         disposeModel(modelRoot);
         modelRoot = gltf.scene;
         originalMaterials = new Map();
@@ -224,18 +271,21 @@ export function initSpatialViewer(models) {
 
         updateBounds();
         applyMaterials();
+        setNotes(modelConfig.id);
         quarterView();
         markView('quarter');
         setStatus('');
         markModel(modelConfig.id);
       },
       xhr => {
+        if(request!==loadRequest)return;
         if (xhr.total) {
           const percent = Math.round((xhr.loaded / xhr.total) * 100);
           setStatus(`${modelConfig.label} 불러오는 중… ${percent}%`);
         }
       },
       err => {
+        if(request!==loadRequest)return;
         console.error(err);
         setStatus(`${modelConfig.label} GLB 로딩 실패`, true);
       }

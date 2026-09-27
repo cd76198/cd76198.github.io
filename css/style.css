@@ -492,3 +492,17 @@ main{max-width:var(--max);margin:0 auto}
 .field-notes summary{cursor:pointer;width:max-content;max-width:100%}
 .field-notes #field-note-links{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
 .field-notes button{border:1px solid #70634f;background:#20242a;color:#e9d3ad;padding:8px 12px;border-radius:4px;cursor:pointer;font:inherit}
+.viewer-notes{padding:13px 16px;border-top:1px solid var(--line);color:#dbc49e}
+.viewer-notes summary{width:max-content;max-width:100%;cursor:pointer;font-size:13px}
+#viewer-note-links{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+#viewer-note-links .viewer-note-group{display:flex;flex-wrap:wrap;align-items:center;gap:8px;width:100%}
+#viewer-note-links .viewer-note-group h4{width:100%;margin:5px 0 0;font-size:13px;font-weight:600}
+#viewer-note-links button{border:1px solid #70634f;background:#20242a;color:#e9d3ad;border-radius:4px;padding:8px 12px;cursor:pointer;font:inherit;font-size:12px}
+#viewer-note-links button:hover{background:#42382e}
+.viewer-note-dialog{width:min(660px,calc(100vw - 28px));max-height:min(78vh,720px);overflow-y:auto;border:1px solid #b18c5e;border-radius:6px;padding:clamp(20px,4vw,36px);background:#242522;color:#f4eee1;box-shadow:0 28px 100px #000b;word-break:keep-all;overflow-wrap:anywhere}
+.viewer-note-dialog::backdrop{background:#05080bd6;backdrop-filter:blur(3px)}
+.viewer-note-dialog #viewer-note-source{margin:0 32px 8px 0;color:#d4a96d;font-size:12px;letter-spacing:.06em}
+.viewer-note-dialog h3{margin:0 32px 22px 0;font-size:clamp(20px,4vw,30px);line-height:1.35;color:#f6d99f}
+.viewer-note-dialog #viewer-note-content p{margin:0 0 16px;font-size:clamp(15px,2.6vw,18px);line-height:1.7}
+.viewer-note-dialog #viewer-note-content mark{color:inherit;font-weight:750;background:linear-gradient(transparent 54%,#929d8b94 54%,#929d8b94 91%,transparent 91%);padding:0 .03em;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.viewer-note-dialog #viewer-note-close{position:absolute;right:12px;top:10px;border:0;background:transparent;color:#f4eee1;font-size:32px;line-height:1;cursor:pointer}

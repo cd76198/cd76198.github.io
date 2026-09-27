@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&amp;family=Noto+Serif+KR:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./css/style.css?v=13">
+  <link rel="stylesheet" href="./css/style.css?v=15">
   <link rel="stylesheet" href="./css/briefing-letter.css?v=5">
   <script type="importmap">{"imports":{"three":"./vendor/three.module.js","three/addons/":"./vendor/addons/"}}</script>
 </head>
@@ -156,14 +156,21 @@
         </div>
 
         <div id="viewer-stage" class="viewer-stage">
-          <canvas id="viewer-canvas" aria-label="회전 가능한 3차원 레벨 뷰어"></canvas>
+          <canvas id="viewer-canvas" aria-label="회전 가능한 3차원 레벨 뷰어. 번호를 누르면 공간 설명이 열립니다"></canvas>
           <div id="viewer-status" class="viewer-status" role="status" aria-live="polite">불러오는 중…</div>
           <div class="viewer-help">
-            드래그 · 회전 &nbsp; / &nbsp; 휠 · 확대 &nbsp; / &nbsp; 오른쪽 드래그 · 이동
+            번호 클릭 · 공간 설명 &nbsp; / &nbsp; 드래그 · 회전 &nbsp; / &nbsp; 휠 · 확대
           </div>
         </div>
+        <details class="viewer-notes"><summary>설명 지점 목록</summary><div id="viewer-note-links"></div></details>
 
       </div>
+      <dialog id="viewer-note-dialog" class="viewer-note-dialog" aria-labelledby="viewer-note-title">
+        <button type="button" id="viewer-note-close" aria-label="공간 설명 닫기">×</button>
+        <p id="viewer-note-source">레벨기획 포트폴리오</p>
+        <h3 id="viewer-note-title"></h3>
+        <div id="viewer-note-content"></div>
+      </dialog>
     </section>
 
     <section id="portfolio" class="section">
@@ -205,6 +212,6 @@
   </footer>
 
   <script src="./js/mission-briefing.js?v=7"></script>
-  <script type="module" src="./js/app.js?v=12"></script>
+  <script type="module" src="./js/app.js?v=14"></script>
 </body>
 </html>
