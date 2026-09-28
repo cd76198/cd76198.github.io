@@ -13,9 +13,6 @@ function renderProfile() {
   setText('brand-name', p.brandName);
   setText('hero-eyebrow', p.eyebrow);
   setText('hero-summary', p.summary);
-  setText('focus-text', p.focus);
-  setText('about-summary', p.about);
-  setText('footer-name', p.name && p.name !== 'YOUR NAME' ? p.name : p.brandName);
 
   const titleEl = document.getElementById('hero-title');
   titleEl.innerHTML = String(p.title || '').split('\n').map(line => escapeHtml(line).replaceAll('공간을 정량화하고','<span class="hero-phrase"><span class="hero-emphasis">공간을 정량화</span>하고</span>').replaceAll('근거로 설계하는','<span class="hero-phrase"><span class="hero-emphasis">근거로 설계</span>하는</span>')).join('<br>');
@@ -31,61 +28,6 @@ function renderProfile() {
     heroActions.appendChild(a);
   }
 
-  const aboutLinks = document.getElementById('about-links');
-  aboutLinks.innerHTML = '';
-
-  if (!(p.links || []).length) {
-    aboutLinks.hidden = true;
-  } else {
-    aboutLinks.hidden = false;
-    for (const link of p.links) {
-      const a = document.createElement('a');
-      a.href = link.href;
-      a.target = link.href.startsWith('http') ? '_blank' : '';
-      a.rel = link.href.startsWith('http') ? 'noopener noreferrer' : '';
-      a.innerHTML = `<span>${escapeHtml(link.label)}</span><span>↗</span>`;
-      aboutLinks.appendChild(a);
-    }
-  }
-}
-
-function renderProjects() {
-  const grid = document.getElementById('portfolio-grid');
-  if (!grid) return;
-  grid.innerHTML = '';
-
-  for (const project of siteData.projects || []) {
-    const card = document.createElement('article');
-    card.className = 'project-card';
-
-    const tags = (project.tags || [])
-      .map(tag => `<span class="project-tag">${escapeHtml(tag)}</span>`)
-      .join('');
-
-    let actions = '';
-    if ((project.links || []).length) {
-      actions = project.links.map(link =>
-        `<a class="project-link${link.primary ? ' primary' : ''}" href="${escapeAttr(link.href)}">${escapeHtml(link.label)}</a>`
-      ).join('');
-    }
-
-    const visual = project.index === '03'
-      ? '<div class="project-visual project-visual--analysis"><img class="project-crest" src="./assets/images/loa-compass.webp" alt=""><small>공간 구조와 플레이 흐름</small><span>아르고스 2관문</span></div>'
-      : `<div class="project-visual"><img src="./assets/images/${project.index === '01' ? 'field' : 'dungeon'}-overview.webp" alt="${escapeAttr(project.title)} 맵 전경" loading="lazy"></div>`;
-    card.innerHTML = `
-      ${visual}
-      <div class="project-top">
-        <span class="project-index">${escapeHtml(project.index)}</span>
-        <span class="project-status">${escapeHtml(project.status)}</span>
-      </div>
-      <h3>${escapeHtml(project.title)}</h3>
-      <p class="project-role">${escapeHtml(project.role)}</p>
-      <div class="project-tags">${tags}</div>
-      ${actions ? `<div class="project-actions">${actions}</div>` : ''}
-    `;
-
-    grid.appendChild(card);
-  }
 }
 
 function escapeHtml(value='') {
@@ -97,12 +39,7 @@ function escapeHtml(value='') {
     .replaceAll("'", '&#039;');
 }
 
-function escapeAttr(value='') {
-  return escapeHtml(value);
-}
-
 renderProfile();
-renderProjects();
 const fieldNoteLinks=document.getElementById('field-note-links');
 const fieldNoteDialog=document.getElementById('field-note-dialog');
 fieldNotes.forEach((point,index)=>{
@@ -132,7 +69,7 @@ const viewerNotes=createViewerNotes();
 viewerNotes.setModel((siteData.viewerModels||[]).find(model=>model.enabled)?.id);
 async function loadSpatialViewer() {
   try {
-    const { initSpatialViewer } = await import('./viewer.js?v=5');
+    const { initSpatialViewer } = await import('./viewer.js?v=6');
     initSpatialViewer(siteData.viewerModels,viewerNotes);
   } catch (error) {
     document.getElementById('viewer-status').textContent = '3D 뷰어를 사용할 수 없습니다. 아래 설명 지점 목록을 열어보세요.';

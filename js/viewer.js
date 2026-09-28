@@ -40,14 +40,6 @@ export function initSpatialViewer(models,viewerNotes) {
   sun.position.set(6, 10, 8);
   scene.add(sun);
 
-  const grid = new THREE.GridHelper(100, 20, 0x59616c, 0x343a42);
-  grid.visible = false;
-  scene.add(grid);
-
-  const axes = new THREE.AxesHelper(25);
-  axes.visible = false;
-  scene.add(axes);
-
   const loader = new GLTFLoader();
 
   let modelRoot = null;
@@ -56,7 +48,6 @@ export function initSpatialViewer(models,viewerNotes) {
   let size = new THREE.Vector3();
   let radius = 1;
   let originalMaterials = new Map();
-  let restoredEnabled = true;
   let loadRequest = 0;
 
   function clearMarkers(){
@@ -179,18 +170,8 @@ export function initSpatialViewer(models,viewerNotes) {
       const original = originalMaterials.get(obj.uuid);
       if (!original) return;
 
-      if (!restoredEnabled) {
-        obj.material = neutralMaterial;
-      } else if (Array.isArray(original)) {
-        obj.material = original;
-      } else {
-        obj.material = original;
-      }
+      obj.material = original;
     });
-
-    const button = document.getElementById('restore-colors');
-    button.classList.toggle('active', restoredEnabled);
-    button.textContent = restoredEnabled ? '원본 색상' : '단색 보기';
   }
 
   function updateBounds() {
@@ -199,9 +180,6 @@ export function initSpatialViewer(models,viewerNotes) {
     box.getSize(size);
     radius = Math.max(size.length() / 2, 1);
 
-    grid.position.set(center.x, box.min.y, center.z);
-    grid.scale.setScalar(Math.max(size.x, size.y, size.z, 1) / 100);
-    axes.position.copy(center);
   }
 
   function setCamera(position, up = new THREE.Vector3(0, 1, 0)) {
@@ -331,21 +309,6 @@ export function initSpatialViewer(models,viewerNotes) {
 
       markView(view);
     });
-  });
-
-  document.getElementById('restore-colors').addEventListener('click', () => {
-    restoredEnabled = !restoredEnabled;
-    applyMaterials();
-  });
-
-  document.getElementById('toggle-grid').addEventListener('click', event => {
-    grid.visible = !grid.visible;
-    event.currentTarget.classList.toggle('active', grid.visible);
-  });
-
-  document.getElementById('toggle-axis').addEventListener('click', event => {
-    axes.visible = !axes.visible;
-    event.currentTarget.classList.toggle('active', axes.visible);
   });
 
   function resize() {

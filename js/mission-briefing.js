@@ -3,7 +3,6 @@
   const briefing = document.getElementById('mission-briefing');
   const sealed = document.getElementById('mission-sealed');
   const start = document.getElementById('mission-start');
-  const replay = document.getElementById('mission-replay');
   const openedDocument = briefing.querySelector('.mission-open');
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   let openingTimer = 0;
@@ -18,7 +17,6 @@
     openedDocument.setAttribute('aria-hidden', 'true');
     sealed.disabled = false;
     start.disabled = false;
-    replay.hidden = true;
     document.body.classList.add('mission-lock');
     window.setTimeout(() => sealed.focus(), 0);
   }
@@ -42,8 +40,7 @@
     briefing.hidden = true;
     briefing.classList.remove('is-opening', 'is-opened', 'is-folding');
     document.body.classList.remove('mission-lock');
-    replay.hidden = false;
-    replay.focus();
+    document.querySelector('.brand').focus();
     window.dispatchEvent(new Event('mission-dismissed'));
   }
 
@@ -58,7 +55,6 @@
 
   sealed.addEventListener('click', openBriefing);
   start.addEventListener('click', foldAndDismiss);
-  replay.addEventListener('click', showSealed);
   window.addEventListener('keydown', event => {
     if (briefing.hidden) return;
     if (event.key === 'Escape') {
@@ -69,7 +65,6 @@
 
   if (sessionStorage.getItem(sessionKey) === 'true') {
     briefing.hidden = true;
-    replay.hidden = false;
     document.body.classList.remove('mission-lock');
   } else {
     showSealed();
