@@ -1,3 +1,4 @@
+import { setNoteHeading } from './note-heading.js?v=1';
 import * as THREE from 'three';
 import { CharacterMovement, characterSettings } from './character-movement.js?v=1';
 import { fieldNotes, appendNoteParagraph } from './field-notes.js?v=5';
@@ -39,7 +40,7 @@ const points = {
   dungeon:[{x:0,z:-12,title:'던전 진입',body:'선발대의 경로를 따라 다리와 문, 계단, 색 순서 장치를 조사합니다.'},{x:52.5,z:11,title:'약한 다리',body:'공격 8회로 다리를 파괴할 수 있으며, 레버에서 복구합니다.'},{x:63,z:11,title:'중간보스 문',body:'문 근처에서 E를 5초 동안 눌러 개방합니다.'},{x:79,z:11,title:'계단',body:'중간보스 처치 후 차단막이 자동으로 열려 아래층으로 내려갈 수 있습니다.'},{x:91.5,z:11,title:'다리 복구 레버',body:'중간보스 처치 후 나타나는 레버입니다. E로 무너진 다리를 복구합니다.'},{x:56.5,z:1.5,floorY:-9.6,title:'색 순서 장치',body:'파랑 → 빨강 → 초록 순서로 누르세요. 오답이면 적 3명이 나타납니다.'}]
 };
 function say(message){log.textContent=message;}
-function setInfo(title,body,highlights=[]){information.replaceChildren();const h=document.createElement('h3');h.textContent=title;information.append(h);for(const line of body.split('\n'))appendNoteParagraph(information,line,highlights)}
+function setInfo(title,body,highlights=[],number){information.replaceChildren();const h=document.createElement('h3');setNoteHeading(h,title,number);information.append(h);for(const line of body.split('\n'))appendNoteParagraph(information,line,highlights)}
 let shownPoint=-1;
 function object(name){let found=null; visual?.traverse(o=>{if(!found && (o.userData?.ue_actor_name===name || o.name===name))found=o});return found;}
 function matching(prefix){let nodes=[];visual?.traverse(o=>{if(o.userData?.ue_actor_name?.startsWith(prefix)||o.name.startsWith(prefix))nodes.push(o)});return nodes.filter(o=>!nodes.some(other=>other!==o && other.getObjectById(o.id)));}
@@ -101,6 +102,7 @@ async function openMap(which){
   markerGroup.children.forEach(m=>{m.material.map?.dispose();m.material.dispose();m.geometry?.dispose()});markerGroup.clear();points[map].forEach((p,i)=>{const m=map==='field'?new THREE.Sprite(new THREE.SpriteMaterial({map:markerTexture(p.number??i+1),transparent:true,depthTest:true})):new THREE.Mesh(new THREE.SphereGeometry(.35,12,8),new THREE.MeshStandardMaterial({color:0xe5b66b,emissive:0x81501e,emissiveIntensity:.7}));if(map==='field')m.scale.set(2.2,2.2,1);m.userData.baseY=map==='field'?p.floorY+1.8:position.y+1.2;m.position.set(p.x,m.userData.baseY,p.z);m.userData.index=i;markerGroup.add(m)});
   const grounded=movement.settle(position,.5);if(grounded)position.copy(grounded);
   shownPoint=-1;information.replaceChildren();restartState();
+  for(const id of ['field','dungeon']){const button=document.getElementById('play-'+id);button.classList.toggle('active',id===map);button.setAttribute('aria-pressed',String(id===map));}
   status.hidden=true;running=true;say(map==='field'?'성당 입구를 찾아 이동하세요.':'던전의 흔적과 장치를 조사하세요.');root.scrollIntoView({behavior:'smooth',block:'start'});
 }
 function active(mesh){for(let o=mesh;o;o=o.parent)if(!o.visible)return false;return true}
@@ -128,7 +130,7 @@ function doAttack(){if(!running||game.finished||performance.now()/1000<game.atta
 }
 function nearestPoint(){return points[map].filter(p=>(p.title!=='다리 복구 레버'||game.lever)&&distance(p.x,p.z)<4).sort((a,b)=>distance(a.x,a.z)-distance(b.x,b.z))[0]}
 function interact(){if(!running||game.finished)return;
-  const near=nearestPoint();if(near){setInfo(near.title,near.body,near.highlights);if(map==='field' && near.x===215 && position.x>215.4){openMap('dungeon');return}}
+  const near=nearestPoint();if(near){setInfo(near.title,near.body,near.highlights,near.number??points[map].indexOf(near)+1);if(map==='field' && near.x===215 && position.x>215.4){openMap('dungeon');return}}
   if(map!=='dungeon')return;
   if(game.lever && objDist('MCP_TEST_MidBossInteraction')<3){game.bridgeBroken=false;game.bridgeHits=0;['P02_BridgeWeakSection_Deck','P02_BridgeWeakSection_RailS','P02_BridgeWeakSection_RailN'].forEach(n=>hide(n,true));say('레버로 다리를 복구했습니다.');return}
   const pads=[['P02_ColorPad_Blue','파랑'],['P02_ColorPad_Red','빨강'],['P02_ColorPad_Green','초록']].sort((a,b)=>objDist(a[0])-objDist(b[0]));
@@ -146,7 +148,7 @@ function update(dt){
   updateWallFade(dt);
   pulse+=dt;markerGroup.children.forEach((m,i)=>{const p=points[map][i];m.visible=p.title!=='다리 복구 레버'||game.lever;m.position.y=(map==='field'?m.userData.baseY:(p.floorY??floorAt(p.x,p.z,position.y)??position.y)+1.2)+Math.sin(pulse*2+i)*.08});
   const close=nearestPoint();prompt.textContent=map==='field'?(close?'지역 설명 · '+close.title:'WASD · 이동'):close?'E · '+close.title:'J / 클릭 · 공격     E · 조작';
-  if(map==='field' && close && shownPoint!==points.field.indexOf(close)){shownPoint=points.field.indexOf(close);setInfo(close.title,close.body,close.highlights)}
+  if(map==='field' && close && shownPoint!==points.field.indexOf(close)){shownPoint=points.field.indexOf(close);setInfo(close.title,close.body,close.highlights,close.number??shownPoint+1)}
   if(map==='field'){const t=metadata.transition.bounds_ue_cm;if(position.x>t.x_open[0]/100 && position.x<t.x_open[1]/100 && Math.abs(position.z)<4.8 && position.y>t.z_open[0]/100-1 && position.y<t.z_open[1]/100+1)openMap('dungeon');return}
   if(!game.chaserStopped && position.x>=48 && !enemies.some(e=>e.kind==='chaser'))spawnChaser();
   if(!game.door && objDist('P02_MidBossDoor')<2.5 && held.has('e')){game.doorHold+=dt;prompt.textContent='문 개방 '+Math.floor(game.doorHold/5*100)+'% · E 유지';if(game.doorHold>=5){game.door=true;hide('P02_MidBossDoor',false);spawnEnemy('boss',metadata.maps.dungeon.objects.MCP_TEST_MidBossEnemy.position,100,1.2,0);game.respawn.set(61,3.3,11);say('중간보스 문이 열렸습니다.')}}else game.doorHold=0;

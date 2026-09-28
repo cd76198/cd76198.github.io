@@ -1,3 +1,4 @@
+import { setNoteHeading } from './note-heading.js?v=1';
 import { fieldNotes, appendNoteParagraph } from './field-notes.js?v=4';
 import { dungeonNotes } from './dungeon-notes.js?v=2';
 
@@ -11,7 +12,7 @@ export function createViewerNotes(){
     const note=notes[index];
     if(!note)return;
     document.getElementById('viewer-note-source').textContent=modelId==='field'?'필드 레벨기획서':'던전 레벨기획서';
-    document.getElementById('viewer-note-title').textContent=`${note.number??index+1}. ${note.title}`;
+    setNoteHeading(document.getElementById('viewer-note-title'),note.title,note.number??index+1);
     const content=document.getElementById('viewer-note-content');
     content.replaceChildren();
     for(const line of note.body.split('\n'))appendNoteParagraph(content,line,note.highlights);
