@@ -17,7 +17,7 @@ renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x11171b);
+scene.background = new THREE.Color(0xd8d5cc);
 scene.add(new THREE.HemisphereLight(0xffffff,0x68717c,2.2));
 const sun = new THREE.DirectionalLight(0xffe4b7,2.1);
 sun.position.set(25,70,35); scene.add(sun);

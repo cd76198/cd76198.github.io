@@ -13,6 +13,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&amp;family=Noto+Serif+KR:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./css/style.css?v=16">
   <link rel="stylesheet" href="./css/briefing-letter.css?v=5">
+  <link rel="stylesheet" href="./css/game-theme.css?v=1">
   <script type="importmap">{"imports":{"three":"./vendor/three.module.js","three/addons/":"./vendor/addons/"}}</script>
 </head>
 <body class="mission-lock">
@@ -101,16 +102,11 @@
         <div id="hero-actions" class="hero-actions"></div>
       </div>
 
-      <div class="hero-meta" aria-label="포트폴리오 핵심">
-        <div>
-          <span class="meta-label">작업 분야</span>
-          <span id="focus-text">필드 · 던전 · 역기획</span>
-        </div>
-        <div>
-          <span class="meta-label">시점</span>
-          <span>고정 쿼터뷰</span>
-        </div>
-      </div>
+      <figure class="hero-world">
+        <img src="./assets/images/field-overview.webp" width="766" height="789" alt="직접 제작한 필드의 성당과 두 갈래 진입로 전경" fetchpriority="high">
+        <figcaption><strong>필드 레벨기획서</strong><span>직접 설계 · 제작한 공간</span></figcaption>
+        <span id="focus-text" class="hero-route">필드 · 던전 · 역기획</span>
+      </figure>
     </section>
 
     <section id="play" class="section play-section">
@@ -119,7 +115,7 @@
       <div class="play-layout"><div class="play-stage"><canvas id="play-canvas" tabindex="0" aria-label="플레이 가능한 필드와 던전"></canvas><div id="play-status" class="play-status">시작할 맵을 선택하세요</div><div id="play-prompt" class="play-prompt">WASD · 이동 / J · 공격 / E · 상호작용</div></div><aside class="play-aside" aria-label="가까이 다가간 지역 설명"><div id="play-information" aria-live="polite"></div></aside></div>
       <p id="play-log" role="status">필드의 번호 지점에 다가가 보세요.</p>
       <div class="play-touch" aria-label="터치 조작"><div class="play-dpad"><button type="button" data-key="w" aria-label="앞으로">▲</button><span><button type="button" data-key="a" aria-label="왼쪽">◀</button><button type="button" data-key="s" aria-label="뒤로">▼</button><button type="button" data-key="d" aria-label="오른쪽">▶</button></span></div><div><button type="button" data-key="j">공격</button><button type="button" data-key="e">상호작용</button></div></div>
-      <p class="play-note">웹 플레이는 제공된 모델·좌표·규칙을 바탕으로 재구성했습니다. UE의 캡슐 충돌 및 전투 AI와 완전히 동일하지 않으며 필드 입구는 최신 보수 던전 v02로 연결됩니다.</p>
+      <p class="play-note">언리얼에서 제작한 맵과 기믹을 웹에서 체험할 수 있도록 재구성했습니다.</p>
       <details class="field-notes"><summary>플레이 없이 필드 내용 보기</summary><div id="field-note-links"></div></details>
       <dialog id="field-note-dialog" class="region-dialog" aria-labelledby="field-note-title"><button type="button" id="field-note-close" aria-label="설명 닫기">×</button><h3 id="field-note-title"></h3><div id="field-note-content"></div></dialog>
     </section>
@@ -131,7 +127,7 @@
           <h2>공간 살펴보기</h2>
         </div>
         <p class="section-desc">
-          실제 UE5 맵을 자유롭게 회전·확대하며 공간 구조를 확인하는 보조 뷰어.
+          시점을 돌려 공간을 둘러보세요. 번호를 누르면 그곳에 담긴 설계 의도가 펼쳐집니다.
         </p>
       </div>
 
@@ -208,10 +204,11 @@
 
   <footer class="footer">
     <span id="footer-name">레벨기획 포트폴리오</span>
-    <span>신진섭 · 레벨기획</span>
+    <span>신진섭 · 레벨기획 포트폴리오</span>
+    <span class="asset-credit">맵 설계·제작 및 기획 문서: 신진섭 · 장식 문양: 로스트아크 모바일 공식 홈페이지 / © Smilegate</span>
   </footer>
 
   <script src="./js/mission-briefing.js?v=7"></script>
-  <script type="module" src="./js/app.js?v=16"></script>
+  <script type="module" src="./js/app.js?v=17"></script>
 </body>
 </html>

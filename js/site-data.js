@@ -31,7 +31,7 @@ export const siteData = {
       links: [{ label: "던전 플레이", href: "#play", primary: true }, { label: "참고 영상", href: "https://youtu.be/d1TWflW1VhE" }]
     },
     {
-      index: "03", title: "아르고스 2페이즈 역기획서", status: "역기획",
+      index: "03", title: "아르고스 2관문 역기획서", status: "역기획",
       role: "기존 레벨의 공간 구조와 플레이 흐름을 분석했습니다.",
       tags: ["공간 분석", "플레이 흐름"], links: []
     }

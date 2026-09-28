@@ -1,4 +1,4 @@
-import { siteData } from './site-data.js?v=2';
+import { siteData } from './site-data.js?v=3';
 import { fieldNotes, appendNoteParagraph } from './field-notes.js?v=5';
 import { createViewerNotes } from './viewer-notes.js?v=2';
 
@@ -68,7 +68,11 @@ function renderProjects() {
       ).join('');
     }
 
+    const visual = project.index === '03'
+      ? '<div class="project-visual project-visual--analysis"><img class="project-crest" src="./assets/images/loa-compass.webp" alt=""><small>공간 구조와 플레이 흐름</small><span>아르고스 2관문</span></div>'
+      : `<div class="project-visual"><img src="./assets/images/${project.index === '01' ? 'field' : 'dungeon'}-overview.webp" alt="${escapeAttr(project.title)} 맵 전경" loading="lazy"></div>`;
     card.innerHTML = `
+      ${visual}
       <div class="project-top">
         <span class="project-index">${escapeHtml(project.index)}</span>
         <span class="project-status">${escapeHtml(project.status)}</span>
@@ -117,7 +121,7 @@ document.getElementById('field-note-close').addEventListener('click',()=>fieldNo
 let playLoaded=false;
 async function loadPlay(){
   if(playLoaded)return;playLoaded=true;
-  try { await import('./play.js?v=13'); }
+  try { await import('./play.js?v=14'); }
   catch(error){playLoaded=false;document.getElementById('play-status').textContent=/WebGL context/i.test(String(error))?'이 브라우저에서 3D 플레이를 사용할 수 없습니다.':'플레이 화면을 불러오지 못했습니다. 새로고침해 주세요.';console.error(error)}
 }
 document.querySelectorAll('a[href="#play"],#play-field,#play-dungeon').forEach(link=>link.addEventListener('pointerdown',loadPlay,{once:true}));
@@ -140,3 +144,7 @@ if (document.getElementById('mission-briefing').hidden) {
 } else {
   window.addEventListener('mission-dismissed', loadSpatialViewer, { once: true });
 }
+
+for(const id of ['play-field','play-dungeon'])document.getElementById(id).addEventListener('click',()=>{
+  for(const other of ['play-field','play-dungeon']){const button=document.getElementById(other);button.classList.toggle('active',id===other);button.setAttribute('aria-pressed',String(id===other));}
+});
