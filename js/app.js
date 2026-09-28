@@ -1,4 +1,4 @@
-import { siteData } from './site-data.js?v=3';
+import { siteData } from './site-data.js?v=4';
 import { fieldNotes, appendNoteParagraph } from './field-notes.js?v=5';
 import { createViewerNotes } from './viewer-notes.js?v=2';
 
@@ -51,6 +51,7 @@ function renderProfile() {
 
 function renderProjects() {
   const grid = document.getElementById('portfolio-grid');
+  if (!grid) return;
   grid.innerHTML = '';
 
   for (const project of siteData.projects || []) {

@@ -9,8 +9,7 @@ export const siteData = {
     about: "의도한 플레이 경험을 공간으로 설계합니다. 수치와 플레이테스트를 근거로 조정합니다.",
     links: [],
     heroActions: [
-      { label: "필드 플레이", href: "#play", primary: true },
-      { label: "포트폴리오 보기", href: "#portfolio", primary: false }
+      { label: "필드 플레이", href: "#play", primary: true }
     ]
   },
   viewerModels: [
