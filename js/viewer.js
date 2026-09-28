@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { fieldNotes } from './field-notes.js?v=4';
-import { dungeonNotes } from './dungeon-notes.js?v=2';
+import { fieldNotes } from './field-notes.js?v=5';
+import { dungeonNotes } from './dungeon-notes.js?v=3';
 import { markerTexture } from './marker-texture.js';
 
 export function initSpatialViewer(models,viewerNotes) {
