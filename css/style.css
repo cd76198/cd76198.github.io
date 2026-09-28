@@ -166,18 +166,22 @@ main{max-width:var(--max);margin:0 auto}
 .hero h1{
   margin:0;
   max-width:940px;
-  font-size:clamp(28px,5.2vw,72px);
+  font-size:clamp(28px,4.5vw,64px);
   line-height:1.16;
   letter-spacing:-.055em;
   font-weight:850;
   word-break:keep-all;
 }
+.hero h1 .hero-emphasis{color:var(--accent)}
+.hero h1 .hero-phrase{white-space:nowrap}
 .hero-summary{
   max-width:760px;
   margin:28px 0 0;
   color:var(--soft);
   font-size:clamp(16px,2vw,22px);
   line-height:1.65;
+  white-space:pre-line;
+  word-break:keep-all;
 }
 .hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
 .link-button,.project-link{

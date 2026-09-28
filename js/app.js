@@ -1,6 +1,6 @@
-import { siteData } from './site-data.js';
-import { fieldNotes, appendNoteParagraph } from './field-notes.js?v=3';
-import { createViewerNotes } from './viewer-notes.js';
+import { siteData } from './site-data.js?v=2';
+import { fieldNotes, appendNoteParagraph } from './field-notes.js?v=4';
+import { createViewerNotes } from './viewer-notes.js?v=2';
 
 function setText(id, value) {
   const el = document.getElementById(id);
@@ -18,7 +18,7 @@ function renderProfile() {
   setText('footer-name', p.name && p.name !== 'YOUR NAME' ? p.name : p.brandName);
 
   const titleEl = document.getElementById('hero-title');
-  titleEl.innerHTML = String(p.title || '').split('\n').map(line => escapeHtml(line)).join('<br>');
+  titleEl.innerHTML = String(p.title || '').split('\n').map(line => escapeHtml(line).replaceAll('공간을 정량화하고','<span class="hero-phrase"><span class="hero-emphasis">공간을 정량화</span>하고</span>').replaceAll('근거로 설계하는','<span class="hero-phrase"><span class="hero-emphasis">근거로 설계</span>하는</span>')).join('<br>');
 
   const heroActions = document.getElementById('hero-actions');
   heroActions.innerHTML = '';
@@ -103,7 +103,7 @@ const fieldNoteDialog=document.getElementById('field-note-dialog');
 fieldNotes.forEach((point,index)=>{
   const button=document.createElement('button');
   button.type='button';
-  button.textContent=`${index+1}. ${point.title}`;
+  button.textContent=`${point.number??index+1}. ${point.title}`;
   button.addEventListener('click',()=>{
     document.getElementById('field-note-title').textContent=point.title;
     const content=document.getElementById('field-note-content');
@@ -117,7 +117,7 @@ document.getElementById('field-note-close').addEventListener('click',()=>fieldNo
 let playLoaded=false;
 async function loadPlay(){
   if(playLoaded)return;playLoaded=true;
-  try { await import('./play.js?v=11'); }
+  try { await import('./play.js?v=12'); }
   catch(error){playLoaded=false;document.getElementById('play-status').textContent=/WebGL context/i.test(String(error))?'이 브라우저에서 3D 플레이를 사용할 수 없습니다.':'플레이 화면을 불러오지 못했습니다. 새로고침해 주세요.';console.error(error)}
 }
 document.querySelectorAll('a[href="#play"],#play-field,#play-dungeon').forEach(link=>link.addEventListener('pointerdown',loadPlay,{once:true}));
@@ -127,7 +127,7 @@ const viewerNotes=createViewerNotes();
 viewerNotes.setModel((siteData.viewerModels||[]).find(model=>model.enabled)?.id);
 async function loadSpatialViewer() {
   try {
-    const { initSpatialViewer } = await import('./viewer.js?v=3');
+    const { initSpatialViewer } = await import('./viewer.js?v=4');
     initSpatialViewer(siteData.viewerModels,viewerNotes);
   } catch (error) {
     document.getElementById('viewer-status').textContent = '3D 뷰어를 사용할 수 없습니다. 아래 설명 지점 목록을 열어보세요.';

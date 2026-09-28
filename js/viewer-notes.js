@@ -1,5 +1,5 @@
-import { fieldNotes, appendNoteParagraph } from './field-notes.js?v=3';
-import { dungeonNotes } from './dungeon-notes.js';
+import { fieldNotes, appendNoteParagraph } from './field-notes.js?v=4';
+import { dungeonNotes } from './dungeon-notes.js?v=2';
 
 export function createViewerNotes(){
   const dialog=document.getElementById('viewer-note-dialog');
@@ -10,8 +10,8 @@ export function createViewerNotes(){
   function open(index){
     const note=notes[index];
     if(!note)return;
-    document.getElementById('viewer-note-source').textContent=modelId==='field'?'안게모스의 순례길':'이름 없는 신의 성당';
-    document.getElementById('viewer-note-title').textContent=`${index+1}. ${note.title}`;
+    document.getElementById('viewer-note-source').textContent=modelId==='field'?'필드 레벨기획서':'던전 레벨기획서';
+    document.getElementById('viewer-note-title').textContent=`${note.number??index+1}. ${note.title}`;
     const content=document.getElementById('viewer-note-content');
     content.replaceChildren();
     for(const line of note.body.split('\n'))appendNoteParagraph(content,line,note.highlights);
@@ -25,7 +25,7 @@ export function createViewerNotes(){
     links.replaceChildren();
     notes.forEach((note,index)=>{
       const button=document.createElement('button');
-      button.type='button';button.textContent=`${index+1}. ${note.title}`;
+      button.type='button';button.textContent=`${note.number??index+1}. ${note.title}`;
       button.addEventListener('click',()=>open(index));
       links.append(button);
     });
@@ -34,11 +34,11 @@ export function createViewerNotes(){
   function showFallback(){
     if(dialog.open)dialog.close();
     links.replaceChildren();
-    for(const [id,title,items] of [['field','안게모스의 순례길',fieldNotes],['dungeon','이름 없는 신의 성당',dungeonNotes]]){
+    for(const [id,title,items] of [['field','필드 레벨기획서',fieldNotes],['dungeon','던전 레벨기획서',dungeonNotes]]){
       const group=document.createElement('div');group.className='viewer-note-group';
       const heading=document.createElement('h4');heading.textContent=title;group.append(heading);
       items.forEach((note,index)=>{
-        const button=document.createElement('button');button.type='button';button.textContent=`${index+1}. ${note.title}`;
+        const button=document.createElement('button');button.type='button';button.textContent=`${note.number??index+1}. ${note.title}`;
         button.addEventListener('click',()=>{modelId=id;notes=items;open(index)});
         group.append(button);
       });

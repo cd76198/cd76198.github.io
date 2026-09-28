@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { fieldNotes } from './field-notes.js?v=3';
-import { dungeonNotes } from './dungeon-notes.js';
+import { fieldNotes } from './field-notes.js?v=4';
+import { dungeonNotes } from './dungeon-notes.js?v=2';
 import { markerTexture } from './marker-texture.js';
 
 export function initSpatialViewer(models,viewerNotes) {
@@ -69,7 +69,7 @@ export function initSpatialViewer(models,viewerNotes) {
     visibleNotes=modelId==='field'?fieldNotes:modelId==='dungeon'?dungeonNotes:[];
     viewerNotes.setModel(modelId);
     visibleNotes.forEach((note,index)=>{
-      const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:markerTexture(index+1),transparent:true,depthTest:false,depthWrite:false}));
+      const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:markerTexture(note.number??index+1),transparent:true,depthTest:false,depthWrite:false}));
       sprite.position.set(note.x,note.floorY+2.5,note.z);
       sprite.scale.set(4.5,4.5,1);
       sprite.userData.noteIndex=index;
@@ -204,8 +204,9 @@ export function initSpatialViewer(models,viewerNotes) {
     axes.position.copy(center);
   }
 
-  function setCamera(position) {
+  function setCamera(position, up = new THREE.Vector3(0, 1, 0)) {
     camera.position.copy(position);
+    camera.up.copy(up);
     controls.target.copy(center);
     camera.near = Math.max(radius / 1000, 0.01);
     camera.far = Math.max(radius * 100, 1000);
@@ -216,9 +217,9 @@ export function initSpatialViewer(models,viewerNotes) {
   function quarterView() {
     const d = radius * 2.25;
     setCamera(new THREE.Vector3(
-      center.x + d * 0.8,
+      center.x - d * 0.8,
       center.y + d * 0.95,
-      center.z + d * 0.8
+      center.z + d * 0.15
     ));
   }
 
@@ -228,15 +229,15 @@ export function initSpatialViewer(models,viewerNotes) {
       center.x,
       center.y + d,
       center.z + 0.001
-    ));
+    ), new THREE.Vector3(1, 0, 0));
   }
 
   function freeView() {
     const d = radius * 2.15;
     setCamera(new THREE.Vector3(
-      center.x + d * 0.95,
+      center.x - d * 0.95,
       center.y + d * 0.75,
-      center.z + d * 0.95
+      center.z + d * 0.15
     ));
   }
 

@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { fieldNotes, appendNoteParagraph } from './field-notes.js?v=3';
+import { fieldNotes, appendNoteParagraph } from './field-notes.js?v=4';
 import { markerTexture } from './marker-texture.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
@@ -97,18 +97,19 @@ async function openMap(which){
   prepareWallFade();
   position.set(...metadata.maps[map].spawn);lastSafe.copy(position);player.position.copy(position);
   camera.fov=2*THREE.MathUtils.radToDeg(Math.atan(Math.tan(Math.PI/8)/camera.aspect));camera.updateProjectionMatrix();
-  markerGroup.children.forEach(m=>{m.material.map?.dispose();m.material.dispose();m.geometry?.dispose()});markerGroup.clear();points[map].forEach((p,i)=>{const m=map==='field'?new THREE.Sprite(new THREE.SpriteMaterial({map:markerTexture(i+1),transparent:true,depthTest:true})):new THREE.Mesh(new THREE.SphereGeometry(.35,12,8),new THREE.MeshStandardMaterial({color:0xe5b66b,emissive:0x81501e,emissiveIntensity:.7}));if(map==='field')m.scale.set(2.2,2.2,1);m.userData.baseY=map==='field'?p.floorY+1.8:position.y+1.2;m.position.set(p.x,m.userData.baseY,p.z);m.userData.index=i;markerGroup.add(m)});
+  markerGroup.children.forEach(m=>{m.material.map?.dispose();m.material.dispose();m.geometry?.dispose()});markerGroup.clear();points[map].forEach((p,i)=>{const m=map==='field'?new THREE.Sprite(new THREE.SpriteMaterial({map:markerTexture(p.number??i+1),transparent:true,depthTest:true})):new THREE.Mesh(new THREE.SphereGeometry(.35,12,8),new THREE.MeshStandardMaterial({color:0xe5b66b,emissive:0x81501e,emissiveIntensity:.7}));if(map==='field')m.scale.set(2.2,2.2,1);m.userData.baseY=map==='field'?p.floorY+1.8:position.y+1.2;m.position.set(p.x,m.userData.baseY,p.z);m.userData.index=i;markerGroup.add(m)});
   shownPoint=-1;information.replaceChildren();restartState();
   status.hidden=true;running=true;say(map==='field'?'성당 입구를 찾아 이동하세요.':'던전의 흔적과 장치를 조사하세요.');root.scrollIntoView({behavior:'smooth',block:'start'});
 }
 function active(mesh){for(let o=mesh;o;o=o.parent)if(!o.visible)return false;return true}
 const stepHeight=.56;
-function floorAt(x,z,fromY){ray.set(new THREE.Vector3(x,fromY+stepHeight+.16,z),down);ray.far=3;let hits=ray.intersectObjects(surfaces.filter(active),false);for(const hit of hits){const n=hit.face?.normal?.clone().transformDirection(hit.object.matrixWorld);if(n?.y>=.71 && hit.point.y<=fromY+stepHeight)return hit.point.y}return null}
-function stairTread(mesh){const name=[mesh.userData?.ue_actor_name,mesh.userData?.ue_actor_label,mesh.name].filter(Boolean).join(' ');return /기존계단보존|왼쪽진입계단|StairB_F[12]_|StairD_\d|TransformStair_Step/.test(name)}
-function blocked(start,delta,nextFloor,halfHeight=.9){
+function floorHitAt(x,z,fromY,climb=stepHeight){ray.set(new THREE.Vector3(x,fromY+climb+.16,z),down);ray.far=3;for(const hit of ray.intersectObjects(surfaces.filter(active),false)){const n=hit.face?.normal?.clone().transformDirection(hit.object.matrixWorld);if(n?.y>=.71 && hit.point.y<=fromY+climb)return hit}return null}
+function floorAt(x,z,fromY,climb=stepHeight){return floorHitAt(x,z,fromY,climb)?.point.y??null}
+function stairTread(mesh){const name=[mesh?.userData?.ue_actor_name,mesh?.userData?.ue_actor_label,mesh?.name].filter(Boolean).join(' ');return /기존계단보존|왼쪽진입계단|StairB_F[12]_|StairD_\d|TransformStair_Step/.test(name)}
+function blocked(start,delta,nextFloor,halfHeight=.9,climb=stepHeight){
   if(delta.lengthSq()<1e-10)return false;
   const direction=delta.clone().normalize(),oldFloor=start.y-halfHeight;
-  const forwardFloor=floorAt(start.x+delta.x+direction.x*.36,start.z+delta.z+direction.z*.36,oldFloor);
+  const forwardFloor=floorAt(start.x+delta.x+direction.x*.36,start.z+delta.z+direction.z*.36,oldFloor,climb);
   const stepFloor=Math.max(nextFloor,forwardFloor??nextFloor);
   for(const height of [-.68,.05,.63]){
     ray.set(new THREE.Vector3(start.x,start.y+height,start.z),direction);ray.far=delta.length()+.35;
@@ -116,7 +117,7 @@ function blocked(start,delta,nextFloor,halfHeight=.9){
       const n=hit.face?.normal?.clone().transformDirection(hit.object.matrixWorld);
       if(!n||Math.abs(n.y)>=.71||hit.distance>=ray.far)continue;
       // A short stair riser may belong to a taller stair mesh, so its full bounding box is not a reliable step test.
-      if(stepFloor>oldFloor+.02 && stepFloor<=oldFloor+stepHeight && hit.point.y<=stepFloor+.08 && (hit.object.userData.walkMaxY<=stepFloor+.1 || stairTread(hit.object)))continue;
+      if(stepFloor>oldFloor+.02 && stepFloor<=oldFloor+climb && hit.point.y<=stepFloor+.08 && (hit.object.userData.walkMaxY<=stepFloor+.1 || stairTread(hit.object)))continue;
       return true;
     }
   }
@@ -124,8 +125,12 @@ function blocked(start,delta,nextFloor,halfHeight=.9){
 }
 function tryMove(dx,dz){
   const x=position.x+dx,z=position.z+dz;
-  const floor=floorAt(x,z,position.y-.9);
-  if(floor===null||floor>position.y-.9+stepHeight||blocked(position,new THREE.Vector3(dx,0,dz),floor))return false;
+  // The field's old pilgrim stairs have a 0.9 m seam between separate stair meshes.
+  // Allow that seam only when the character is already standing on a stair tread.
+  const onStair=stairTread(floorHitAt(position.x,position.z,position.y-.9,.2)?.object);
+  const climb=onStair?.96:stepHeight;
+  const floor=floorAt(x,z,position.y-.9,climb);
+  if(floor===null||floor>position.y-.9+climb||blocked(position,new THREE.Vector3(dx,0,dz),floor,.9,climb))return false;
   position.set(x,floor+.9,z);lastSafe.copy(position);return true;
 }
 function moveStep(dx,dz){
