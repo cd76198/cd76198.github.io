@@ -53,6 +53,11 @@
     openingTimer = window.setTimeout(dismissBriefing, reduceMotion ? 10 : 390);
   }
 
+  document.getElementById('mission-documents').addEventListener('click', () => {
+    dismissBriefing();
+    location.hash = 'portfolio';
+    document.getElementById('portfolio').scrollIntoView();
+  });
   sealed.addEventListener('click', openBriefing);
   start.addEventListener('click', foldAndDismiss);
   window.addEventListener('keydown', event => {
@@ -63,7 +68,7 @@
     }
   });
 
-  if (sessionStorage.getItem(sessionKey) === 'true') {
+  if (sessionStorage.getItem(sessionKey) === 'true' || location.hash === '#portfolio') {
     briefing.hidden = true;
     document.body.classList.remove('mission-lock');
   } else {

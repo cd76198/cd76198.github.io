@@ -14,11 +14,13 @@
   <link rel="stylesheet" href="./css/style.css?v=16">
   <link rel="stylesheet" href="./css/briefing-letter.css?v=5">
   <link rel="stylesheet" href="./css/game-theme.css?v=3">
+  <link rel="stylesheet" href="./css/documents.css?v=1">
   <script type="importmap">{"imports":{"three":"./vendor/three.module.js","three/addons/":"./vendor/addons/"}}</script>
 </head>
 <body class="mission-lock">
   <section id="mission-briefing" class="mission-briefing is-sealed" role="dialog" aria-modal="true" aria-labelledby="mission-title">
     <div class="mission-shade"></div>
+    <button id="mission-documents" class="mission-documents" type="button">문서 바로 보기 →</button>
 
     <div class="mission-stage">
       <div class="mission-prompt">
@@ -81,6 +83,7 @@
     </a>
 
     <nav class="nav" aria-label="주 메뉴">
+      <a href="#portfolio">포트폴리오 문서</a>
       <a href="#play">직접 플레이</a>
       <a href="#viewer">공간 살펴보기</a>
     </nav>
@@ -102,6 +105,16 @@
       </figure>
     </section>
 
+<section id="portfolio" class="section document-section"><div class="section-head"><div><p class="eyebrow">설계와 검수 기록</p><h2>포트폴리오 문서</h2></div><p class="section-desc">프로젝트별 설계 의도와 제작 과정을 읽어보세요.<br>문서 전체를 이 사이트에서 볼 수 있습니다.</p></div><div class="document-grid"><article class="document-card">
+ <a class="document-cover" href="./lyra.html" aria-label="AI를 활용한 배틀로얄 레벨 설계 문서 보기"><img src="./assets/documents/lyra/cover.jpg" alt="AI를 활용한 배틀로얄 레벨 설계 표지" loading="lazy" width="800" height="450"></a>
+ <p class="document-project">TPS SHOOTING Lyra <span>13쪽</span></p><h3>AI를 활용한 배틀로얄 레벨 설계</h3><p class="document-description">AI로 레벨을 구성하고 직접 플레이하며 수정한 배틀로얄 도시 설계입니다.</p>
+ <div class="document-actions"><a class="document-button" href="./lyra.html">문서 보기 <span aria-hidden="true">↗</span></a><a class="document-download" href="./assets/documents/lyra/lyra.pdf" download="신진섭_lyra_포트폴리오.pdf">PDF 다운로드</a></div></article><article class="document-card">
+ <a class="document-cover" href="./field.html" aria-label="필드 레벨기획서 문서 보기"><img src="./assets/documents/field/cover.jpg" alt="필드 레벨기획서 표지" loading="lazy" width="800" height="450"></a>
+ <p class="document-project">이름 없는 신의 성당 <span>26쪽</span></p><h3>필드 레벨기획서</h3><p class="document-description">성당 외부에서 던전 입구까지 이어지는 고정 쿼터뷰 필드입니다.</p>
+ <div class="document-actions"><a class="document-button" href="./field.html">문서 보기 <span aria-hidden="true">↗</span></a><a class="document-download" href="./assets/documents/field/field.pdf" download="신진섭_field_포트폴리오.pdf">PDF 다운로드</a></div></article><article class="document-card">
+ <a class="document-cover" href="./dungeon.html" aria-label="던전 레벨기획서 문서 보기"><img src="./assets/documents/dungeon/cover.jpg" alt="던전 레벨기획서 표지" loading="lazy" width="800" height="450"></a>
+ <p class="document-project">이름 없는 신의 성당 <span>21쪽</span></p><h3>던전 레벨기획서</h3><p class="document-description">높이와 시야로 힌트를 공개하는 고정 쿼터뷰 던전입니다.</p>
+ <div class="document-actions"><a class="document-button" href="./dungeon.html">문서 보기 <span aria-hidden="true">↗</span></a><a class="document-download" href="./assets/documents/dungeon/dungeon.pdf" download="신진섭_dungeon_포트폴리오.pdf">PDF 다운로드</a></div></article></div></section>
     <section id="play" class="section play-section">
       <div class="section-head"><div><h2>필드 레벨기획서</h2></div><p class="section-desc">필드의 번호 지점을 탐색하며 설계 근거를 확인하세요. 성당 입구는 던전으로 이어집니다.</p></div>
       <div class="play-toolbar"><button type="button" id="play-field" aria-pressed="false">필드에서 시작</button><button type="button" id="play-dungeon" aria-pressed="false">던전 바로 시작</button><button type="button" id="play-reset">처음부터</button><span id="play-hp">HP 100</span></div>
@@ -151,7 +164,7 @@
 
   </main>
 
-  <script src="./js/mission-briefing.js?v=8"></script>
-  <script type="module" src="./js/app.js?v=20"></script>
+  <script src="./js/mission-briefing.js?v=9"></script>
+  <script type="module" src="./js/app.js?v=21"></script>
 </body>
 </html>
